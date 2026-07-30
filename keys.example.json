@@ -1,0 +1,17 @@
+[
+  {
+    "filename": "invoice_0001.pdf",
+    "min_io_key": "ocr-stress/ab12cd34ef56-invoice_0001.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "packing_list_0001.pdf",
+    "min_io_key": "ocr-stress/99887766aabb-packing_list_0001.pdf",
+    "doc_type": "packing_list"
+  },
+  {
+    "filename": "bl_0001.pdf",
+    "min_io_key": "ocr-stress/deadbeef1234-bl_0001.pdf",
+    "doc_type": "bill_of_lading"
+  }
+]

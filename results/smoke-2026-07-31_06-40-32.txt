@@ -1,0 +1,23 @@
+     ✓ GET /health -> 200
+     ✓ POST /ocr/create -> 202
+     ✓ has job_id
+     ✓ job reached SUCCESS
+     ✓ SUCCESS job has non-empty extracted data
+
+     checks.........................: 100.00% ✓ 5        ✗ 0  
+     data_received..................: 13 kB   505 B/s
+     data_sent......................: 3.7 kB  151 B/s
+     http_req_blocked...............: avg=19.67ms min=0s      med=0s      max=196.72ms p(90)=19.67ms  p(95)=108.19ms
+     http_req_connecting............: avg=5.23ms  min=0s      med=0s      max=52.39ms  p(90)=5.23ms   p(95)=28.81ms 
+     http_req_duration..............: avg=51.59ms min=17.95ms med=39.09ms max=123.16ms p(90)=104.25ms p(95)=113.7ms 
+       { expected_response:true }...: avg=51.59ms min=17.95ms med=39.09ms max=123.16ms p(90)=104.25ms p(95)=113.7ms 
+     http_req_failed................: 0.00%   ✓ 0        ✗ 10 
+     http_req_receiving.............: avg=0s      min=0s      med=0s      max=0s       p(90)=0s       p(95)=0s      
+     http_req_sending...............: avg=0s      min=0s      med=0s      max=0s       p(90)=0s       p(95)=0s      
+     http_req_tls_handshaking.......: avg=14.31ms min=0s      med=0s      max=143.18ms p(90)=14.31ms  p(95)=78.75ms 
+     http_req_waiting...............: avg=51.59ms min=17.95ms med=39.09ms max=123.16ms p(90)=104.25ms p(95)=113.7ms 
+     http_reqs......................: 10      0.404488/s
+     iteration_duration.............: avg=24.72s  min=24.72s  med=24.72s  max=24.72s   p(90)=24.72s   p(95)=24.72s  
+     iterations.....................: 1       0.040449/s
+     vus............................: 1       min=1      max=1
+     vus_max........................: 1       min=1      max=1

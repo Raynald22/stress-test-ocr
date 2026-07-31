@@ -1,0 +1,56 @@
+[
+  {
+    "filename": "corrupt_header.pdf",
+    "min_io_key": "ocr-stress/93aeb293ec7a492a94abdf8b6960a6c3-corrupt_header.pdf",
+    "doc_type": "invoice",
+    "defect": "corrupt_header"
+  },
+  {
+    "filename": "truncated.pdf",
+    "min_io_key": "ocr-stress/6512663ddfb34c0284a81baa5d80c62b-truncated.pdf",
+    "doc_type": "invoice",
+    "defect": "truncated"
+  },
+  {
+    "filename": "garbage.pdf",
+    "min_io_key": "ocr-stress/6ea3ecb9f523400c8f82f8b548955b32-garbage.pdf",
+    "doc_type": "invoice",
+    "defect": "garbage_bytes"
+  },
+  {
+    "filename": "empty.pdf",
+    "min_io_key": "ocr-stress/1f45140fa6794fe39697906adcf5d7c6-empty.pdf",
+    "doc_type": "invoice",
+    "defect": "empty_file"
+  },
+  {
+    "filename": "image_as_pdf.pdf",
+    "min_io_key": "ocr-stress/678c4a0b3cfa4686bba501f387161419-image_as_pdf.pdf",
+    "doc_type": "invoice",
+    "defect": "content_type_mismatch"
+  },
+  {
+    "filename": "oversized.pdf",
+    "min_io_key": "ocr-stress/00d9533a77854a35bee648c3b04c106f-oversized.pdf",
+    "doc_type": "invoice",
+    "defect": "oversized"
+  },
+  {
+    "filename": "blank_scan.pdf",
+    "min_io_key": "ocr-stress/463c67af45d648a9befb1049dac7893d-blank_scan.pdf",
+    "doc_type": "bill_of_lading",
+    "defect": "blank_no_text"
+  },
+  {
+    "filename": "many_pages.pdf",
+    "min_io_key": "ocr-stress/360d70b9a6a147fb80a4e6c5a9fba2b9-many_pages.pdf",
+    "doc_type": "invoice",
+    "defect": "many_pages"
+  },
+  {
+    "filename": "encrypted.pdf",
+    "min_io_key": "ocr-stress/cd24c7456e44492abee66bdf8f9ead68-encrypted.pdf",
+    "doc_type": "invoice",
+    "defect": "encrypted"
+  }
+]

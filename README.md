@@ -60,6 +60,7 @@ saat kebanjiran, bukan tiba-tiba error/hang.
 | `smoke.js` | Tes 1 job (cek koneksi & data bener). **Jalanin duluan.** |
 | `ocr_stress.js` | Tes beban utama (load/throughput). |
 | `negative.js` | Tes input salah di level API. |
+| `idempotency.js` | Tes kirim job yang sama 2x beruntun (duplicate submission). |
 | `robustness.js` | Tes file rusak (OCR gagal dengan rapi). |
 | `seed_min_io_keys.py` | (dev) nyiapin file uji ke MinIO + bikin `keys.json`. |
 | `chaos_probe.py` | (dev) pemandu tes ketahanan (matiin RabbitMQ/DB/dll). |
@@ -67,7 +68,7 @@ saat kebanjiran, bukan tiba-tiba error/hang.
 | `results/` | Tempat laporan hasil tersimpan otomatis. |
 | `keys.example.json` | Contoh bentuk `keys.json`. |
 
-Urutan biasa: **smoke → ocr_stress → negative → robustness → chaos**.
+Urutan biasa: **smoke → ocr_stress → negative → idempotency → robustness → chaos**.
 
 ---
 
@@ -114,6 +115,12 @@ k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-ocr \
 
 Kalau ini gagal, **jangan lanjut** ke tes beban — pasti ada yang salah (alamat,
 token, atau daftar file). Beresin dulu di sini biar nggak bingung nanti.
+
+> Catatan: `smoke.js` sekarang juga ngecek kalau job `SUCCESS`, hasil OCR-nya
+> **nggak boleh kosong** (minimal ada satu field hasil ekstraksi yang keisi,
+> di luar field metadata kayak status/job_id). Job yang `SUCCESS` tapi
+> hasilnya kosong itu bug tersembunyi — kelihatan LULUS padahal OCR-nya nggak
+> baca apa-apa.
 
 ---
 
@@ -171,7 +178,25 @@ yang nggak ada, body request rusak, dan `job_id` ngawur.
 
 ---
 
-## Langkah 5 — Tes file rusak (robustness)
+## Langkah 5 — Tes kirim job dobel (idempotency)
+
+Ngecek kalau `min_io_key` yang sama dikirim jadi 2 job beruntun (nggak ada
+jeda), servernya nggak error 500 dan nggak hang — baik itu di-dedupe jadi 1
+job atau diproses jadi 2 job independen:
+
+```bash
+k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-ocr \
+       -e AUTH_TOKEN=token_kamu idempotency.js
+```
+
+Skrip ini **nggak maksa** ada kebijakan dedupe tertentu — cuma mastiin
+perilakunya rapi. Kalau ternyata jadi 2 job independen, skrip bakal
+ngingetin buat dev/ops ngecek manual apakah ada baris DB dobel untuk
+`min_io_key` yang sama.
+
+---
+
+## Langkah 6 — Tes file rusak (robustness)
 
 Ngecek OCR-nya **gagal dengan rapi** waktu ketemu file jelek — bukan nge-hang
 atau bikin worker mati. Dev nyiapin dulu kumpulan file "jahat" (rusak,
@@ -200,6 +225,13 @@ file sampah — layak dilaporin sebagai bug).
 
 > Catatan: file `oversized.pdf` ukurannya ~55MB dan bakal beneran di-OCR di
 > server, jadi lumayan berat. Wajar kalau lambat.
+
+Korpus file jelek sekarang juga termasuk 2 kasus PDF yang **valid secara
+struktur** tapi bermasalah dari sisi konten (bukan byte-nya yang rusak):
+`blank_scan.pdf` (halaman kosong, nggak ada teks sama sekali — mirip hasil
+scan yang putih polos) dan `many_pages.pdf` (500 halaman — nguji ketahanan
+parser/pipeline terhadap dokumen yang tebal, beda dari `oversized.pdf` yang
+cuma 1 halaman digedein ukuran byte-nya).
 
 ---
 
@@ -243,7 +275,7 @@ k6 cuma lihat dari luar. Idealnya, pas tes jalan, dev juga mantau:
 
 ---
 
-## Langkah 6 — Tes "ketahanan" (chaos test) — dibantu dev/ops
+## Langkah 7 — Tes "ketahanan" (chaos test) — dibantu dev/ops
 
 Ini nguji: *kalau ada bagian yang mati, sistemnya rusak diam-diam, atau gagal
 dengan jelas dan bisa pulih?* Ada skrip bantu **`chaos_probe.py`** (Python,

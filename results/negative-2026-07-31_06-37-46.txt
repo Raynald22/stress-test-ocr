@@ -1,0 +1,25 @@
+     ✓ empty job -> 400
+     ✓ empty job -> error envelope
+     ✓ bad ext -> 400
+     ✓ bad ext -> error envelope
+     ✓ empty filename -> 400
+     ✓ ghost key -> 404
+     ✓ ghost key -> error envelope
+     ✓ malformed body -> 422
+     ✓ weird filename -> not 500
+     ✓ unknown job -> 404
+
+   ✓ checks.....................: 100.00% ✓ 10        ✗ 0
+     data_received..............: 9.0 kB  24 kB/s
+     data_sent..................: 3.3 kB  8.9 kB/s
+     http_req_blocked...........: avg=14.05ms  min=0s       med=0s       max=98.4ms   p(90)=39.36ms  p(95)=68.88ms 
+     http_req_connecting........: avg=4.92ms   min=0s       med=0s       max=34.49ms  p(90)=13.79ms  p(95)=24.14ms 
+     http_req_duration..........: avg=38.21ms  min=19.33ms  med=40.11ms  max=51.7ms   p(90)=46.07ms  p(95)=48.89ms 
+     http_req_failed............: 100.00% ✓ 7         ✗ 0
+     http_req_receiving.........: avg=219.64µs min=0s       med=0s       max=1ms      p(90)=720.62µs p(95)=865µs   
+     http_req_sending...........: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_tls_handshaking...: avg=9.05ms   min=0s       med=0s       max=63.38ms  p(90)=25.35ms  p(95)=44.36ms 
+     http_req_waiting...........: avg=37.99ms  min=19.33ms  med=39.8ms   max=51.7ms   p(90)=46.07ms  p(95)=48.89ms 
+     http_reqs..................: 7       19.002386/s
+     iteration_duration.........: avg=368.37ms min=368.37ms med=368.37ms max=368.37ms p(90)=368.37ms p(95)=368.37ms
+     iterations.................: 1       2.714627/s

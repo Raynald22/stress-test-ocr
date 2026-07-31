@@ -38,18 +38,9 @@ import uuid
 from pathlib import Path
 
 
-def _minimal_pdf(text: str) -> bytes:
-    """A valid, single-page PDF with one line of text and a correct xref table.
-    Enough for the OCR engine to parse; kept tiny so seeding is fast."""
-    stream = b"BT /F1 12 Tf 72 720 Td (%s) Tj ET" % text.encode("latin-1", "replace")
-    objs = [
-        b"<</Type/Catalog/Pages 2 0 R>>",
-        b"<</Type/Pages/Kids[3 0 R]/Count 1>>",
-        b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]"
-        b"/Resources<</Font<</F1 5 0 R>>>>/Contents 4 0 R>>",
-        b"<</Length %d>>\nstream\n%s\nendstream" % (len(stream), stream),
-        b"<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>",
-    ]
+def _build_pdf(objs: list[bytes]) -> bytes:
+    """Wrap a list of already-formatted indirect objects (obj 1..N, in order)
+    into a complete PDF with a correct xref table and trailer."""
     out = bytearray(b"%PDF-1.4\n")
     offsets = []
     for i, body in enumerate(objs, start=1):
@@ -65,11 +56,71 @@ def _minimal_pdf(text: str) -> bytes:
     return bytes(out)
 
 
+def _minimal_pdf(text: str) -> bytes:
+    """A valid, single-page PDF with one line of text and a correct xref table.
+    Enough for the OCR engine to parse; kept tiny so seeding is fast."""
+    stream = b"BT /F1 12 Tf 72 720 Td (%s) Tj ET" % text.encode("latin-1", "replace")
+    objs = [
+        b"<</Type/Catalog/Pages 2 0 R>>",
+        b"<</Type/Pages/Kids[3 0 R]/Count 1>>",
+        b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]"
+        b"/Resources<</Font<</F1 5 0 R>>>>/Contents 4 0 R>>",
+        b"<</Length %d>>\nstream\n%s\nendstream" % (len(stream), stream),
+        b"<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>",
+    ]
+    return _build_pdf(objs)
+
+
+def _blank_pdf() -> bytes:
+    """A structurally valid, single-page PDF with an EMPTY content stream —
+    no text, no drawing operators. Simulates a blank/whited-out scanned page:
+    unlike the corrupt/truncated cases, nothing here is malformed, so the
+    worker must get all the way through OCR and fail *on content*, not on
+    parsing."""
+    objs = [
+        b"<</Type/Catalog/Pages 2 0 R>>",
+        b"<</Type/Pages/Kids[3 0 R]/Count 1>>",
+        b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R>>",
+        b"<</Length 0>>\nstream\n\nendstream",
+    ]
+    return _build_pdf(objs)
+
+
+def _many_page_pdf(n_pages: int = 500) -> bytes:
+    """A valid PDF with a large page count, each page carrying a tiny bit of
+    text. Stresses the parser/pipeline on document *depth* rather than raw
+    byte size (unlike oversized.pdf, which is one page padded with bytes)."""
+    font_obj = 2 * n_pages + 3
+    content_start = 3 + n_pages
+    kids = " ".join("%d 0 R" % (3 + i) for i in range(n_pages)).encode()
+
+    objs = [
+        b"<</Type/Catalog/Pages 2 0 R>>",
+        b"<</Type/Pages/Kids[%s]/Count %d>>" % (kids, n_pages),
+    ]
+    for i in range(n_pages):
+        content_obj = content_start + i
+        objs.append(
+            b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]"
+            b"/Resources<</Font<</F1 %d 0 R>>>>/Contents %d 0 R>>"
+            % (font_obj, content_obj)
+        )
+    for i in range(n_pages):
+        stream = b"BT /F1 10 Tf 72 720 Td (page %d) Tj ET" % (i + 1)
+        objs.append(b"<</Length %d>>\nstream\n%s\nendstream" % (len(stream), stream))
+    objs.append(b"<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>")
+
+    return _build_pdf(objs)
+
+
 def _bad_corpus(size_mb: int = 55) -> list[tuple[str, bytes, str]]:
-    """Malformed files the worker/OCR must reject *gracefully* (job FAILED with a
-    clear error), not hang or crash on. Each: (filename, bytes, defect-label).
-    All keep a .pdf extension so they pass the API's extension gate and actually
-    reach the worker — the point is to stress the OCR path, not the upload gate."""
+    """Malformed (or content-wise problematic) files the worker/OCR must reject
+    *gracefully* (job FAILED with a clear error), not hang or crash on. Each:
+    (filename, bytes, defect-label). All keep a .pdf extension so they pass the
+    API's extension gate and actually reach the worker — the point is to stress
+    the OCR path, not the upload gate. Covers both malformed bytes (corrupt/
+    truncated/garbage/empty/oversized/wrong-content-type/encrypted) and valid-
+    but-problematic PDFs (blank page with no text, very high page count)."""
     import os
     good = _minimal_pdf("robustness probe")
     tiny_png = (b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
@@ -84,6 +135,10 @@ def _bad_corpus(size_mb: int = 55) -> list[tuple[str, bytes, str]]:
         ("image_as_pdf.pdf", tiny_png, "content_type_mismatch"),
         # valid PDF padded past MAX_UPLOAD_SIZE_MB (default 50) with trailing bytes
         ("oversized.pdf", good + b"\n%% pad " + b"0" * (size_mb * 1024 * 1024), "oversized"),
+        # structurally valid, but no extractable text — a real "blank scan" case
+        ("blank_scan.pdf", _blank_pdf(), "blank_no_text"),
+        # structurally valid, 500 pages — stresses parser depth, not byte size
+        ("many_pages.pdf", _many_page_pdf(500), "many_pages"),
     ]
 
     # Encrypted/password-protected PDF — best effort, needs pypdf. Skipped (with a

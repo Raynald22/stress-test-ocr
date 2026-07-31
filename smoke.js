@@ -28,6 +28,28 @@ function headers() {
   return h;
 }
 
+// Job metadata keys we expect on every getData response regardless of doc
+// type. Anything else present with a non-empty value counts as "the OCR
+// actually extracted something" — we don't know the exact per-doc-type
+// schema here (that's the service's business), so this is a schema-agnostic
+// sanity check, not full field validation.
+const META_FIELDS = new Set([
+  'status', 'progress', 'job_id', 'doc_type', 'filename',
+  'created_at', 'updated_at', 'min_io_key', 'error', 'message',
+]);
+function hasExtractedContent(data) {
+  if (!data || typeof data !== 'object') return false;
+  return Object.keys(data).some((k) => {
+    if (META_FIELDS.has(k)) return false;
+    const v = data[k];
+    if (v === null || v === undefined) return false;
+    if (typeof v === 'string') return v.trim().length > 0;
+    if (Array.isArray(v)) return v.length > 0;
+    if (typeof v === 'object') return Object.keys(v).length > 0;
+    return true; // number/bool present counts as content
+  });
+}
+
 export default function () {
   // health first
   const health = http.get(`${BASE_URL}/health`, { headers: headers() });
@@ -50,6 +72,7 @@ export default function () {
 
   const start = Date.now();
   let status = null;
+  let finalData = null;
   while ((Date.now() - start) / 1000 < MAX_WAIT_S) {
     sleep(POLL_INTERVAL_S);
     const res = http.get(`${BASE_URL}/ocr/getData/${jobId}`, { headers: headers() });
@@ -57,9 +80,24 @@ export default function () {
     status = res.json('data.status');
     const progress = res.json('data.progress');
     console.log(`  status=${status} progress=${progress}`);
-    if (status === 'SUCCESS' || status === 'FAILED') break;
+    if (status === 'SUCCESS' || status === 'FAILED') { finalData = res.json('data'); break; }
   }
 
   check(status, { 'job reached SUCCESS': (s) => s === 'SUCCESS' });
+
+  // "SUCCESS" only means the pipeline didn't error — it doesn't mean the OCR
+  // actually read anything useful off the page. Flag the empty-result case
+  // separately since it's the kind of silent failure a plain status check
+  // would miss.
+  if (status === 'SUCCESS') {
+    const extracted = hasExtractedContent(finalData);
+    check(extracted, { 'SUCCESS job has non-empty extracted data': () => extracted });
+    if (!extracted) {
+      console.error(`  WARNING: job ${jobId} ended SUCCESS but no extracted fields `
+        + `were found beyond job metadata — check the response schema/content `
+        + `manually. data=${JSON.stringify(finalData)}`);
+    }
+  }
+
   console.log(`done in ${((Date.now() - start) / 1000).toFixed(1)}s — final status=${status}`);
 }

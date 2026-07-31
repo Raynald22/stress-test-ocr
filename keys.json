@@ -1,0 +1,102 @@
+[
+  {
+    "filename": "invoice_0000.pdf",
+    "min_io_key": "ocr-stress/75cb3fd8fbb74d67aefd823190a7fa26-invoice_0000.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0001.pdf",
+    "min_io_key": "ocr-stress/b786f15e42f2403ebf405dcbf54da435-invoice_0001.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0002.pdf",
+    "min_io_key": "ocr-stress/fddc8489221a4b7cace3265aa6d26386-invoice_0002.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0003.pdf",
+    "min_io_key": "ocr-stress/434cefdba6564d89ac7261b34fba09d1-invoice_0003.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0004.pdf",
+    "min_io_key": "ocr-stress/15c77a4e09174e618cae46beaa0d1f4e-invoice_0004.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0005.pdf",
+    "min_io_key": "ocr-stress/2b428a446eb04a67a875aec2937437c8-invoice_0005.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0006.pdf",
+    "min_io_key": "ocr-stress/9eb6a9fedc304b78a7828d15ec7cdeab-invoice_0006.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0007.pdf",
+    "min_io_key": "ocr-stress/757206b3c8574112a34b681377638ec4-invoice_0007.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0008.pdf",
+    "min_io_key": "ocr-stress/6fcd82ccb1e84f7590c55211a8e19860-invoice_0008.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0009.pdf",
+    "min_io_key": "ocr-stress/4171b6f7de8f4d6c999c136d18f393ea-invoice_0009.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0010.pdf",
+    "min_io_key": "ocr-stress/bc0e97bfc4584f60880915e26e738fd9-invoice_0010.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0011.pdf",
+    "min_io_key": "ocr-stress/507b25b2e88546d7bc0c241c50609d9c-invoice_0011.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0012.pdf",
+    "min_io_key": "ocr-stress/702338e3f3ad4ea5a9fe45039bdf994e-invoice_0012.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0013.pdf",
+    "min_io_key": "ocr-stress/fe30b2c9f0d846f389d02c1329d373fe-invoice_0013.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0014.pdf",
+    "min_io_key": "ocr-stress/1444894cd2bc4cf1b738c61259266e76-invoice_0014.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0015.pdf",
+    "min_io_key": "ocr-stress/b06d22e0f52c45a2a89c6c5bb138d07e-invoice_0015.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0016.pdf",
+    "min_io_key": "ocr-stress/6a1536037c2d49b39e3f4d87cb0449f2-invoice_0016.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0017.pdf",
+    "min_io_key": "ocr-stress/1a22689b47ef4e18b7c34e0a45676c3e-invoice_0017.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0018.pdf",
+    "min_io_key": "ocr-stress/6ae59a5086c34ed3be17ce14a7bf6fad-invoice_0018.pdf",
+    "doc_type": "invoice"
+  },
+  {
+    "filename": "invoice_0019.pdf",
+    "min_io_key": "ocr-stress/f3f9ee6b25d1484c91a5b7da6c20cf03-invoice_0019.pdf",
+    "doc_type": "invoice"
+  }
+]

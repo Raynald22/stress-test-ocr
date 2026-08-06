@@ -1,0 +1,32 @@
+{
+  "_comment": [
+    "Daftar endpoint READ (GET) yang aman buat di-hammer waktu load test.",
+    "Semua ini GET list — cuma baca, nggak ngubah data. Path relatif ke BASE_URL.",
+    "Salin file ini jadi targets.json lalu buang endpoint yang nggak mau dites.",
+    "sample_ids: (opsional) UUID yang beneran ADA di DB dev, buat nge-tes GET /:id.",
+    "Kalau kosong, skrip skip tes GET-by-id dan cuma pukul endpoint list."
+  ],
+  "read_endpoints": [
+    "/api/v1/bc20/header",
+    "/api/v1/bc20/barang",
+    "/api/v1/bc20/dokumen",
+    "/api/v1/bc20/entitas",
+    "/api/v1/bc20/kemasan",
+    "/api/v1/bc20/kontainer",
+    "/api/v1/bc16/header",
+    "/api/v1/bc16/barang",
+    "/api/v1/bc23/header",
+    "/api/v1/bc23/barang",
+    "/api/v1/ftz01/header",
+    "/api/v1/ftz01/barang"
+  ],
+  "get_by_id": [
+    { "base": "/api/v1/bc20/header", "id": "00000000-0000-0000-0000-000000000000" }
+  ],
+  "upload": {
+    "_comment": "Dipakai MODE=upload. sample_xlsx = path ke file .xlsx template VALID dari dev (relatif ke folder hpc/).",
+    "sample_xlsx": "samples/template_bc20.xlsx",
+    "created_by": "qa-loadtest",
+    "id_rekam": "loadtest-0001"
+  }
+}

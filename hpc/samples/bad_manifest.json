@@ -1,0 +1,37 @@
+[
+  {
+    "file": "bad/not_really.xlsx",
+    "note": "plain text renamed .xlsx (not a zip container)",
+    "expect_reject": true
+  },
+  {
+    "file": "bad/empty.xlsx",
+    "note": "zero-byte file",
+    "expect_reject": true
+  },
+  {
+    "file": "bad/oversized.xlsx",
+    "note": "just over the 10MB upload limit -> expect 413",
+    "expect_reject": true
+  },
+  {
+    "file": "bad/truncated.xlsx",
+    "note": "valid xlsx truncated to half its bytes",
+    "expect_reject": true
+  },
+  {
+    "file": "bad/blank.xlsx",
+    "note": "valid xlsx but completely empty (no header, no rows)",
+    "expect_reject": true
+  },
+  {
+    "file": "bad/no_iddoc.xlsx",
+    "note": "valid xlsx, but no id_doc / unmapped schema -> business reject",
+    "expect_reject": true
+  },
+  {
+    "file": "bad/many_rows.xlsx",
+    "note": "valid xlsx with 50k rows (parser load) \u2014 must not hang",
+    "expect_reject": false
+  }
+]

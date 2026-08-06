@@ -27,7 +27,7 @@ import { makeSummary } from './summary.js';
 export const handleSummary = makeSummary('load');
 
 // ---- config (all overridable via -e ENV=...) --------------------------------
-const BASE_URL   = (__ENV.BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
+const BASE_URL   = (__ENV.BASE_URL || 'https://dev-backend.insw.go.id/kepabeanan-ocr').replace(/\/+$/, '');
 const AUTH_TOKEN = __ENV.AUTH_TOKEN || '';
 const MODE       = __ENV.MODE || 'arrival';          // 'arrival' (open) | 'vus' (closed)
 const DURATION   = __ENV.DURATION || '5m';

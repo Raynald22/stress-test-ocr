@@ -18,7 +18,7 @@ import { makeSummary } from './summary.js';
 
 export const handleSummary = makeSummary('idempotency');
 
-const BASE_URL   = (__ENV.BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
+const BASE_URL   = (__ENV.BASE_URL || 'https://dev-backend.insw.go.id/kepabeanan-ocr').replace(/\/+$/, '');
 const AUTH_TOKEN = __ENV.AUTH_TOKEN || '';
 const MAX_WAIT_S = Number(__ENV.MAX_WAIT_S || 300);
 const POLL_INTERVAL_S = Number(__ENV.POLL_INTERVAL_S || 3);

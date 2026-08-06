@@ -43,9 +43,11 @@ saat kebanjiran, bukan tiba-tiba error/hang.
 
 - **k6** (alat load test) di komputer kamu.
   Cara install: https://grafana.com/docs/k6/latest/set-up/install-k6/
-- **Alamat server** yang mau dites (dari dev), contohnya:
-  `https://dev-backend.insw.go.id/kepabeanan-ocr`
-- **Token login** (kalau server minta) — tanya ke dev.
+- **Alamat server** — sudah di-set default ke
+  `https://dev-backend.insw.go.id/kepabeanan-ocr` di semua skrip, jadi
+  `-e BASE_URL=...` **opsional** (cuma perlu kalau nembak env lain).
+- **Token** — **nggak perlu**. Service ini nggak pakai auth. Perintah di bawah
+  nggak butuh token.
 - File **`keys.json`** (dari dev) — daftar file uji. Contoh isinya ada di
   `keys.example.json`.
 
@@ -105,16 +107,15 @@ Hasilnya file `keys.json` yang isinya kira-kira begini:
 
 ## Langkah 2 — Tes 1 job dulu (smoke test)
 
-**Selalu jalanin ini duluan.** Tujuannya mastiin alamat server, token, dan
-daftar file-nya bener — dengan ngirim **1 job aja** dari awal sampai selesai.
+**Selalu jalanin ini duluan.** Tujuannya mastiin alamat server dan daftar
+file-nya bener — dengan ngirim **1 job aja** dari awal sampai selesai.
 
 ```bash
-k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-ocr \
-       -e AUTH_TOKEN=token_kamu smoke.js
+k6 run smoke.js
 ```
 
-Kalau ini gagal, **jangan lanjut** ke tes beban — pasti ada yang salah (alamat,
-token, atau daftar file). Beresin dulu di sini biar nggak bingung nanti.
+Kalau ini gagal, **jangan lanjut** ke tes beban — pasti ada yang salah (alamat
+atau daftar file). Beresin dulu di sini biar nggak bingung nanti.
 
 > Catatan: `smoke.js` sekarang juga ngecek kalau job `SUCCESS`, hasil OCR-nya
 > **nggak boleh kosong** (minimal ada satu field hasil ekstraksi yang keisi,
@@ -128,9 +129,7 @@ token, atau daftar file). Beresin dulu di sini biar nggak bingung nanti.
 
 ```bash
 # kirim 6 job per menit, selama 10 menit
-k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-ocr \
-       -e AUTH_TOKEN=token_kamu \
-       -e MODE=arrival -e SUBMIT_RATE=6 -e SUBMIT_UNIT=1m -e DURATION=10m \
+k6 run -e MODE=arrival -e SUBMIT_RATE=6 -e SUBMIT_UNIT=1m -e DURATION=10m \
        ocr_stress.js
 ```
 
@@ -169,8 +168,7 @@ Ngecek server nolak input jelek **dengan sopan** (kasih kode error yang benar),
 bukan malah error 500 atau nge-hang:
 
 ```bash
-k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-ocr \
-       -e AUTH_TOKEN=token_kamu negative.js
+k6 run negative.js
 ```
 
 Yang diuji: job kosong, tipe file nggak didukung, nama file kosong, alamat file
@@ -185,8 +183,7 @@ jeda), servernya nggak error 500 dan nggak hang — baik itu di-dedupe jadi 1
 job atau diproses jadi 2 job independen:
 
 ```bash
-k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-ocr \
-       -e AUTH_TOKEN=token_kamu idempotency.js
+k6 run idempotency.js
 ```
 
 Skrip ini **nggak maksa** ada kebijakan dedupe tertentu — cuma mastiin
@@ -214,8 +211,7 @@ ada, file itu dilewati otomatis, sisanya tetap jalan.)
 Lalu QA jalanin:
 
 ```bash
-k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-ocr \
-       -e AUTH_TOKEN=token_kamu robustness.js
+k6 run robustness.js
 ```
 
 Tiap file dikirim jadi 1 job. Aturan utamanya: **setiap job harus sampai ke
@@ -287,10 +283,10 @@ ngasih **LULUS/GAGAL**. Matiin/nyalain bagiannya tetap manual (biasanya dev/ops)
 
 ```bash
 # satu skenario
-python chaos_probe.py rabbitmq --base-url https://dev-backend.insw.go.id/kepabeanan-ocr --token XXX
+python chaos_probe.py rabbitmq --base-url https://dev-backend.insw.go.id/kepabeanan-ocr
 
 # atau semua sekaligus
-python chaos_probe.py all --base-url https://dev-backend.insw.go.id/kepabeanan-ocr --token XXX
+python chaos_probe.py all --base-url https://dev-backend.insw.go.id/kepabeanan-ocr
 ```
 
 Skenario yang dicek (dan hasil yang diharapkan):

@@ -1,0 +1,361 @@
+{
+  "pengajuan": {
+    "headerAju": [
+      {
+        "nomorAju": "000000202607290001",
+        "kantorPabean": "040300",
+        "kodeKantor": "040300",
+        "jenisPib": "1",
+        "jenisImpor": "1",
+        "caraBayar": "1",
+        "tanggalPengajuan": "2026-07-29",
+        "nomorPendaftaran": "000123",
+        "tanggalPendaftaran": "2026-07-29",
+        "kodeGudangPlb": "GD01",
+        "statusPemilikanBarang": "1",
+        "tujuan": "1",
+        "jenisPemasukan": "1",
+        "jenisPemberitahuan": "BC20",
+        "kategoriPemasukan": "1",
+        "tujuanPemasukan": "1",
+        "jenisTransaksiPerpajakan": "1",
+        "jenisPpkek": "1",
+        "jenisKegiatan": "1",
+        "asalPemasukan": "1",
+        "transaksiMasuk": "1"
+      }
+    ],
+    "transaksi": [
+      {
+        "valuta": "USD",
+        "ndpbm": "1550230",
+        "incoterms": "FOB",
+        "jenisTransaksi": "1",
+        "nilaiJasa": "5000",
+        "nilaiPabeanCif": "500320",
+        "nilaiPabeanCifIdr": "77500000",
+        "biayaPenambahan": "100",
+        "biayaPengurangan": "50",
+        "harga": "4850",
+        "nilaiFob": "4850",
+        "biayaTransportasiFreight": "100",
+        "jenisNilai": "1",
+        "asuransi": "50",
+        "nilaiAsuransi": "50",
+        "diskon": "0",
+        "beratKotor": "1200",
+        "jenisPembagi": "1",
+        "beratBersih": "1000"
+      }
+    ],
+    "pengangkutan": [
+      {
+        "caraAngkut": "1",
+        "namaSaranaAngkut": "OCEAN VOYAGER",
+        "nomorVoyage": "V-102",
+        "bendera": "SG",
+        "perkiraanTanggalTiba": "2026-08-05",
+        "kodeTutup": "1",
+        "nomorTutup": "0099",
+        "tanggalTutup": "2026-07-29",
+        "nomorPos": "0001",
+        "nomorSubPos": "0000",
+        "nomorSubsubPos": "0000"
+      }
+    ],
+    "pelabuhanDanTempatTimbun": [
+      {
+        "pelabuhanMuat": "SGSIN",
+        "pelabuhanTransit": "MYPKG",
+        "pelabuhanTujuan": "IDTPP",
+        "tempatTimbun": "GD01",
+        "lokasiPemeriksaan": "LOK01"
+      }
+    ]
+  },
+  "kemasanDanKontainer": {
+    "kemasan": [
+      {
+        "seri": 1,
+        "jumlah": "100",
+        "jenisKemasan": "BX",
+        "merek": "ACME",
+        "kemasan": "BOX"
+      }
+    ],
+    "kontainer": [
+      {
+        "seri": 1,
+        "nomorKontainer": "TEMU1234567",
+        "ukuran": "20",
+        "jenisMuatan": "FCL",
+        "tipe": "GP",
+        "nomorSeal": "SL-999"
+      }
+    ]
+  },
+  "dokumenLampiran": {
+    "dokumenLampiran": [
+      {
+        "seri": 1,
+        "kodeDokumen": "380",
+        "nomorDokumen": "INV-2026-001",
+        "tanggal": "2026-07-25",
+        "kodeFasilitas": "1",
+        "kodeIzin": "1",
+        "dokumen": "Invoice",
+        "negaraAsal": "SG",
+        "kategoriDokumen": "1"
+      }
+    ]
+  },
+  "entitas": {
+    "entitas": [
+      {
+        "jenisEntitas": "1",
+        "jenisIdentitas": "5",
+        "nitku": "0000",
+        "nama": "PT IMPORTIR JAYA",
+        "alamat": "Jl. Raya Industri No. 12",
+        "status": "1",
+        "kodeNegara": "ID",
+        "kodeAfiliasi": "1",
+        "nib": "123456789012",
+        "nomorIzinPlb": "PLB-001",
+        "ijinBadanPengusaha": "1",
+        "pelakuUsaha": "1",
+        "jenisApi": "1",
+        "tanggalIzinPlb": "2026-01-01",
+        "nomorIzinPtb": "PTB-001",
+        "tanggalNp": "2026-01-01",
+        "tanggalIzinPtb": "2026-01-01",
+        "npPpjk": "123456789012345",
+        "nomorApi": "12345678910"
+      },
+      {
+        "jenisEntitas": "2",
+        "jenisIdentitas": "5",
+        "nitku": "0001",
+        "nama": "PT EKSPORTIR NUSANTARA",
+        "alamat": "Jl. Pelabuhan Raya No. 45",
+        "status": "1",
+        "kodeNegara": "ID",
+        "kodeAfiliasi": "2",
+        "nib": "223456789012",
+        "nomorIzinPlb": "PLB-002",
+        "ijinBadanPengusaha": "1",
+        "pelakuUsaha": "2",
+        "jenisApi": "2",
+        "tanggalIzinPlb": "2026-01-05",
+        "nomorIzinPtb": "PTB-002",
+        "tanggalNp": "2026-01-05",
+        "tanggalIzinPtb": "2026-01-05",
+        "npPpjk": "223456789012345",
+        "nomorApi": "22345678910"
+      },
+      {
+        "jenisEntitas": "3",
+        "jenisIdentitas": "5",
+        "nitku": "0002",
+        "nama": "PT PPJK MITRA BEA CUKAI",
+        "alamat": "Jl. Tanjung Priok No. 8",
+        "status": "1",
+        "kodeNegara": "ID",
+        "kodeAfiliasi": "1",
+        "nib": "323456789012",
+        "nomorIzinPlb": "PLB-003",
+        "ijinBadanPengusaha": "2",
+        "pelakuUsaha": "3",
+        "jenisApi": "1",
+        "tanggalIzinPlb": "2026-01-10",
+        "nomorIzinPtb": "PTB-003",
+        "tanggalNp": "2026-01-10",
+        "tanggalIzinPtb": "2026-01-10",
+        "npPpjk": "323456789012345",
+        "nomorApi": "32345678910"
+      },
+      {
+        "jenisEntitas": "4",
+        "jenisIdentitas": "6",
+        "nitku": "0003",
+        "nama": "PT PENGANGKUT SAMUDERA",
+        "alamat": "Jl. Dermaga Timur No. 21",
+        "status": "1",
+        "kodeNegara": "ID",
+        "kodeAfiliasi": "2",
+        "nib": "423456789012",
+        "nomorIzinPlb": "PLB-004",
+        "ijinBadanPengusaha": "1",
+        "pelakuUsaha": "4",
+        "jenisApi": "3",
+        "tanggalIzinPlb": "2026-01-15",
+        "nomorIzinPtb": "PTB-004",
+        "tanggalNp": "2026-01-15",
+        "tanggalIzinPtb": "2026-01-15",
+        "npPpjk": "423456789012345",
+        "nomorApi": "42345678910"
+      },
+      {
+        "jenisEntitas": "5",
+        "jenisIdentitas": "5",
+        "nitku": "0004",
+        "nama": "PT PEMILIK BARANG SEJAHTERA",
+        "alamat": "Jl. Kawasan Berikat No. 7",
+        "status": "1",
+        "kodeNegara": "ID",
+        "kodeAfiliasi": "1",
+        "nib": "523456789012",
+        "nomorIzinPlb": "PLB-005",
+        "ijinBadanPengusaha": "2",
+        "pelakuUsaha": "5",
+        "jenisApi": "2",
+        "tanggalIzinPlb": "2026-01-20",
+        "nomorIzinPtb": "PTB-005",
+        "tanggalNp": "2026-01-20",
+        "tanggalIzinPtb": "2026-01-20",
+        "npPpjk": "523456789012345",
+        "nomorApi": "52345678910"
+      },
+      {
+        "jenisEntitas": "6",
+        "jenisIdentitas": "6",
+        "nitku": "0005",
+        "nama": "PT PENGUSAHA TPS BERSAMA",
+        "alamat": "Jl. Cakung Cilincing No. 99",
+        "status": "1",
+        "kodeNegara": "ID",
+        "kodeAfiliasi": "2",
+        "nib": "623456789012",
+        "nomorIzinPlb": "PLB-006",
+        "ijinBadanPengusaha": "1",
+        "pelakuUsaha": "6",
+        "jenisApi": "1",
+        "tanggalIzinPlb": "2026-01-25",
+        "nomorIzinPtb": "PTB-006",
+        "tanggalNp": "2026-01-25",
+        "tanggalIzinPtb": "2026-01-25",
+        "npPpjk": "623456789012345",
+        "nomorApi": "62345678910"
+      }
+    ]
+  },
+  "barang": {
+    "barang": [
+      {
+        "seri": 1,
+        "hsCode": "84713010",
+        "kodeBarang": "BRG001",
+        "uraian": "Laptop ACME 15 Inch",
+        "merek": "ACME",
+        "tipe": "LPT-15",
+        "ukuran": "Standard",
+        "spesifikasiLain": "Intel i7, 16GB RAM",
+        "kondisiBarang": "NEW",
+        "negara": "SG",
+        "beratBersih": "1000",
+        "beratKotor": "1200",
+        "kategoriBarang": "1",
+        "dokumenDetail": "Detail",
+        "uraianBtki": "BTKI laptop",
+        "uraianMasterlist": "Masterlist laptop",
+        "uraianIzin": "Izin impor laptop",
+        "pernyataanLartas": "NON-LARTAS",
+        "asalBarang": "SG",
+        "harga": "5000",
+        "tujuanKarantina": "1",
+        "volume": "1.5",
+        "kodeSatuan": "PCE",
+        "jumlahSatuan": "100",
+        "kodeKemasan": "BX",
+        "jumlahKemasan": "100",
+        "hargaInvoice": "5000",
+        "biayaPenambahan": "0",
+        "biayaPengurangan": "0",
+        "hargaPerSatuan": "50",
+        "freight": "100",
+        "asuransi": "50",
+        "nilaiVd": "0",
+        "nilaiCif": "5150",
+        "nilaiPabeanRupiah": "79825000",
+        "metodeNilaiPabean": "1",
+        "alasan": "Transaction Value",
+        "perbedaanHarga": "0",
+        "fob": "5000",
+        "tambahanDiskon": "0",
+        "seriBarangSpesifikasi": "1",
+        "kodeSpesifikasi": "SPEC01",
+        "keteranganSpesifikasi": "Voltage 220V"
+      }
+    ],
+    "barangDokumen": [
+      {
+        "seriIzin": 1
+      }
+    ],
+    "barangKarantina": [
+      {
+        "jumlah": "100",
+        "satuan": "PCE",
+        "namaUmum": "Laptop",
+        "namaLatin": "Laptopus digitalis",
+        "komoditi": "Electronic",
+        "klasifikasi": "High-tech",
+        "kantorUptSatpel": "UPT-01"
+      }
+    ],
+    "barangTarif": [
+      {
+        "jenisPungutan": "BM",
+        "jenisTarif": "AdValorem",
+        "kodeSatuan": "PCE",
+        "jumlahSatuan": "100",
+        "nilaiTarif": "5",
+        "kodeFasilitasTarif": "1",
+        "nilaiBayar": "250",
+        "nilaiFasilitas": "0"
+      }
+    ],
+    "barangVd": [
+      {
+        "jenis": "1",
+        "nilai": "0",
+        "tanggalJatuhTempo": "2026-09-01"
+      }
+    ]
+  },
+  "karantina": {
+    "karantina": [
+      {
+        "kodeKantorKarantina": "KPT-01",
+        "uptImpor": "UPT-IMPORT-01",
+        "tingkatPengolahan": "Finished Product",
+        "peruntukan": "Commercial",
+        "kodeModa": "1",
+        "namaModa": "SEA",
+        "nomorVoyage": "V-102",
+        "bendera": "SG",
+        "lokasiPemeriksa": "LOK-KAR-01",
+        "tanggalPemeriksa": "2026-08-06",
+        "alamatPemeriksa": "Pelabuhan Tanjung Priok",
+        "tujuanImpor": "Sale",
+        "daerahTujuan": "DKI Jakarta",
+        "jenisTempat": "Gudang",
+        "nomorRegistrasi": "REG-123",
+        "alamat": "Jl. Karantina Indah No. 5"
+      }
+    ]
+  },
+  "penanggungJawab": {
+    "penanggungJawab": [
+      {
+        "nama": "BUDI SANTOSO",
+        "jabatan": "Direktur Utama",
+        "kota": "Jakarta",
+        "tanggal": "2026-07-29",
+        "telepon": "081234567890",
+        "email": "budi@importirjaya.com",
+        "alamat": "Jl. Kencana Utama No. 8"
+      }
+    ]
+  }
+}

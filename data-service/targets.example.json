@@ -1,0 +1,59 @@
+{
+  "_comment": [
+    "Config buat stress test LNSW Data Service. Salin jadi targets.json, buang yang nggak perlu.",
+    "referensi_endpoints : GET referensi (di-cache Redis) — jalur baca terpanas, aman di-hammer.",
+    "domain_endpoints    : GET domain (langsung DB, nggak di-cache) — lebih berat dari referensi.",
+    "bundle / nomoraju   : jalur TULIS. Nambah data di DB tiap request — cuma ke env dev/buangan.",
+    "Semua path relatif ke BASE_URL. Auth default MATI; kalau dinyalain, kasih -e API_KEY=1n5w2026#"
+  ],
+  "referensi_endpoints": [
+    "/api/v1/referensi/kantor-pabean",
+    "/api/v1/referensi/jenis-pib",
+    "/api/v1/referensi/jenis-import",
+    "/api/v1/referensi/valuta",
+    "/api/v1/referensi/valuta-transaksi",
+    "/api/v1/referensi/jenis-transaksi",
+    "/api/v1/referensi/incoterm-transaksi",
+    "/api/v1/referensi/jenis-asuransi",
+    "/api/v1/referensi/cara-pengangkutan",
+    "/api/v1/referensi/negara-pengangkutan",
+    "/api/v1/referensi/jenis-identitas",
+    "/api/v1/referensi/status",
+    "/api/v1/referensi/negara",
+    "/api/v1/referensi/jenis-dokumen",
+    "/api/v1/referensi/jenis-kemasan",
+    "/api/v1/referensi/jenis-muatan",
+    "/api/v1/referensi/kontainer-ukuran",
+    "/api/v1/referensi/kontainer-tipe",
+    "/api/v1/referensi/jenis-nilai",
+    "/api/v1/referensi/jenis-pungutan",
+    "/api/v1/referensi/fasilitas-modul",
+    "/api/v1/referensi/komoditi",
+    "/api/v1/referensi/satuan",
+    "/api/v1/referensi/kemasan",
+    "/api/v1/referensi/jenis-tarif",
+    "/api/v1/referensi/jenis-api",
+    "/api/v1/referensi/jenis-pemberitahu",
+    "/api/v1/referensi/hscode?keyword=beras",
+    "/api/v1/referensi/kurs?kodeKurs=USD"
+  ],
+  "domain_endpoints": [
+    "/api/v1/pengajuan",
+    "/api/v1/barang",
+    "/api/v1/entitas",
+    "/api/v1/karantina",
+    "/api/v1/kemasan-dan-kontainer",
+    "/api/v1/dokumen-lampiran",
+    "/api/v1/penanggung-jawab",
+    "/api/v1/ikb"
+  ],
+  "bundle": {
+    "_comment": "Jalur tulis berat (dipanggil HPC). payload = file JSON relatif ke folder data-service/.",
+    "path": "/api/v1/ssm-impor-api-bundle-post",
+    "payload": "samples/bundle.json"
+  },
+  "nomoraju": {
+    "_comment": "POST tanpa body. Pakai Postgres sequence + advisory lock — buat tes konkurensi.",
+    "path": "/api/v1/pengajuan/generateNomorAju"
+  }
+}

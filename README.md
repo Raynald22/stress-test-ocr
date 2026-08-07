@@ -1,6 +1,6 @@
 # QA Stress Tests — Kepabeanan
 
-Folder ini isinya alat **stress/load test** buat tiga service kepabeanan yang
+Folder ini isinya alat **stress/load test** buat empat service kepabeanan yang
 beda karakternya. Masing-masing dipisah ke sub-folder sendiri karena **cara
 ngetesnya beda** — jangan dicampur.
 
@@ -9,6 +9,7 @@ ngetesnya beda** — jangan dicampur.
 | [`ocr/`](./ocr/) | **kepabeanan-ocr** | **Async** (kirim job → poll `job_id` sampai `SUCCESS`/`FAILED`) | Waktu 1 job selesai (end-to-end), ketahanan antrian |
 | [`hpc/`](./hpc/) | **kepabeanan-hpc** | **Sinkron** (1 request → 1 response) | Latency (p95) & throughput (req/detik), Excel upload |
 | [`data-service/`](./data-service/) | **kepabeanan-data-service** | **Sinkron** (1 request → 1 response) | Latency (p95) & throughput; baca ter-cache (Redis) vs DB, bundle POST, generateNomorAju |
+| [`legacy/`](./legacy/) | **kepabeanan-legacy** (Legacy Bridge Platform) | **Sinkron** (+ async Temporal, belum dites) | Latency & throughput di bawah **rate limit 50 rps**, validasi/transform, perilaku limiter (429) |
 
 ## Bedanya di mana (penting)
 
@@ -26,6 +27,11 @@ pas dibanjirin. Path utama: `/api/v1/...`, health di `/healthz`.
 referensi (di-cache Redis), baca/tulis domain, dan endpoint **bundle** yang
 dipanggil HPC. Tes-nya mirip HPC (latency + throughput), plus angle khusus:
 cache referensi vs baca DB, dan konkurensi `generateNomorAju`.
+
+**Legacy (LBP) itu platform integrasi**, bukan CRUD. Fokus tes: endpoint sinkron
+(validasi `kirimData`, transform XML↔JSON, scanner VT) — tapi hati-hati ada
+**rate limiter 50 rps/IP** yang bikin request di atas itu kena 429. Jadi ada tes
+khusus buat mastiin limiternya kerja rapi. Jalur async (Temporal) belum dicakup.
 
 ## Yang perlu duluan
 
@@ -75,14 +81,29 @@ cp targets.example.json targets.json
 k6 run smoke.js                                                    # cek konek + envelope
 k6 run -e MODE=referensi -e RATE=100 -e DURATION=5m stress.js      # baca cached (aman)
 k6 run -e MODE=domain -e RATE=50 -e DURATION=5m stress.js          # baca DB (aman)
+k6 run -e MODE=review -e RATE=30 -e DURATION=5m stress.js          # Review & Submit (isi idHeader di targets.json)
 k6 run -e VUS=30 -e DURATION=20s nomoraju.js                       # konkurensi generateNomorAju
 k6 run negative.js                                                 # input salah
 # jalur berat (nulis data, dev only):
 k6 run -e MODE=bundle -e RATE=3 -e DURATION=3m stress.js
 ```
 
-> Kalau auth di service dinyalain lagi, tambah `-e API_KEY=1n5w2026#` di tiap
-> perintah. Kalau mau nembak env selain dev, tambah `-e BASE_URL=...`.
+## Cara pakai — Legacy / LBP (`legacy/`)
+
+Platform integrasi, **ada rate limit 50 rps/IP** — jaga RATE di bawah itu.
+
+```bash
+cd legacy
+k6 run smoke.js                                                   # health + kirimData
+k6 run -e MODE=kirim -e RATE=40 -e DURATION=3m stress.js          # validasi (di bawah limit)
+k6 run -e MODE=xml2json -e RATE=40 -e DURATION=3m stress.js        # transform XML->JSON
+k6 run -e RATE=200 -e DURATION=30s ratelimit.js                   # tes limiter (harus 429 rapi)
+k6 run negative.js                                                # input salah
+```
+
+> Kalau auth di service dinyalain lagi, tambah `-e API_KEY=...` (data-service:
+> `1n5w2026#`; legacy: `-e API_KEY=<key> -e TENANT=<tenant>`). Kalau mau nembak
+> env selain dev, tambah `-e BASE_URL=...`.
 
 ---
 

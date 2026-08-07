@@ -10,6 +10,9 @@
 //                Best for finding the cached read ceiling + checking cache pays off.
 //   MODE=domain             — hammer GET domain endpoints (pengajuan/barang/...).
 //                Read-only, but hits Postgres directly (no cache) — heavier.
+//   MODE=review             — hammer GET /review-dan-submit?idHeader=<uuid>. Read-only
+//                but an aggregate query (statistik kelengkapan across sections).
+//                Needs valid idHeader UUIDs in targets.json (review_dan_submit.id_headers).
 //   MODE=bundle             — POST /ssm-impor-api-bundle-post with the sample
 //                bundle. HEAVY WRITE (insert across many tables in one tx). This
 //                is the path HPC calls. WRITES DATA every request — dev only.
@@ -37,19 +40,21 @@ export const handleSummary = makeSummary('load');
 // ---- config -----------------------------------------------------------------
 const BASE_URL = (__ENV.BASE_URL || 'https://dev-backend.insw.go.id/kepabeanan-data-service').replace(/\/+$/, '');
 const API_KEY  = __ENV.API_KEY || '';
-const MODE     = __ENV.MODE || 'referensi';          // 'referensi' | 'domain' | 'bundle'
+const MODE     = __ENV.MODE || 'referensi';          // 'referensi' | 'domain' | 'review' | 'bundle'
 const DURATION = __ENV.DURATION || '5m';
 const RATE     = Number(__ENV.RATE || (MODE === 'bundle' ? 3 : 100));
 const UNIT     = __ENV.UNIT || '1s';
 const MAX_VUS  = Number(__ENV.MAX_VUS || 150);
 const PRE_VUS  = Number(__ENV.PRE_VUS || Math.min(MAX_VUS, 30));
 // SLO gates — reads should be fast, bundle writes are heavy. Tune to your target.
-const P95_MS       = Number(__ENV.P95_MS || (MODE === 'bundle' ? 8000 : (MODE === 'domain' ? 1500 : 500)));
+const P95_MS       = Number(__ENV.P95_MS || (MODE === 'bundle' ? 8000 : ((MODE === 'domain' || MODE === 'review') ? 1500 : 500)));
 const MAX_FAIL_PCT = Number(__ENV.MAX_FAIL_PCT || 0.01);
 
 const TARGETS = new SharedArray('targets', () => [JSON.parse(open('./targets.json'))])[0];
 const REFERENSI = TARGETS.referensi_endpoints || [];
 const DOMAIN    = TARGETS.domain_endpoints || [];
+const REVIEW    = TARGETS.review_dan_submit || {};
+const REVIEW_IDS = REVIEW.id_headers || [];
 const BUNDLE    = TARGETS.bundle || {};
 const BUNDLE_BODY = (MODE === 'bundle' && BUNDLE.payload)
   ? new SharedArray('bundle', () => [open(`./${BUNDLE.payload}`)])[0]
@@ -100,6 +105,26 @@ export default function () {
     const ok = check(res, { 'bundle POST -> 2xx': (r) => r.status >= 200 && r.status < 300 });
     reqFailed.add(!ok);
     if (!ok) console.error(`bundle POST ${res.status}: ${String(res.body).slice(0, 200)}`);
+    return;
+  }
+
+  // review mode: GET /review-dan-submit?idHeader=<valid uuid> (endpoint requires it)
+  if (MODE === 'review') {
+    if (REVIEW_IDS.length === 0) {
+      console.error('MODE=review needs review_dan_submit.id_headers in targets.json (valid idHeader UUIDs from dev)');
+      reqFailed.add(true);
+      return;
+    }
+    const id = randomItem(REVIEW_IDS);
+    const res = http.get(`${BASE_URL}${REVIEW.path || '/api/v1/review-dan-submit'}?idHeader=${id}`,
+      { headers: headers(), tags: { name: 'review' } });
+    readLatency.add(res.timings.duration);
+    const ok = check(res, {
+      'review -> 200': (r) => r.status === 200,
+      'review has success:true': (r) => { try { return r.json('success') === true; } catch (_) { return false; } },
+    });
+    reqFailed.add(!ok);
+    if (!ok) console.error(`review idHeader=${id} -> ${res.status}: ${String(res.body).slice(0, 200)}`);
     return;
   }
 

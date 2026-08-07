@@ -47,6 +47,13 @@
     "/api/v1/penanggung-jawab",
     "/api/v1/ikb"
   ],
+  "review_dan_submit": {
+    "_comment": "MODE=review. Endpoint WAJIB idHeader (UUID yang ADA di DB dev). Isi id_headers dgn 1+ UUID valid dari dev — kalau kosong, MODE=review nggak jalan.",
+    "path": "/api/v1/review-dan-submit",
+    "id_headers": [
+      "00000000-0000-0000-0000-000000000000"
+    ]
+  },
   "bundle": {
     "_comment": "Jalur tulis berat (dipanggil HPC). payload = file JSON relatif ke folder data-service/.",
     "path": "/api/v1/ssm-impor-api-bundle-post",

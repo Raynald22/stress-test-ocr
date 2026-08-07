@@ -104,7 +104,7 @@ Pengaturan (semua `-e NAMA=nilai`):
 
 | Pengaturan | Default | Artinya |
 |---|---|---|
-| `MODE` | `referensi` | `referensi` / `domain` / `bundle` |
+| `MODE` | `referensi` | `referensi` / `domain` / `review` / `bundle` |
 | `RATE` + `UNIT` | `100` + `1s` | Request per satuan waktu |
 | `DURATION` | `5m` | Lama tes |
 | `MAX_VUS` | `150` | Batas atas user paralel |
@@ -119,9 +119,25 @@ Pengaturan (semua `-e NAMA=nilai`):
 k6 run -e MODE=domain -e RATE=50 -e DURATION=5m stress.js
 ```
 
-Sama kayak referensi tapi nembak endpoint domain (pengajuan/barang/…) yang query
+Sama kayak referensi tapi nembak endpoint domain (pengajuan/barang/entitas/
+kemasan-dan-kontainer/dokumen-lampiran/karantina/penanggung-jawab/ikb) yang query
 Postgres langsung. Wajar lebih lambat. Bandingin `ds_read_ms`-nya sama referensi
 buat lihat seberapa besar untungnya cache.
+
+---
+
+## Langkah 3b — Beban Review & Submit (perlu idHeader)
+
+```bash
+k6 run -e MODE=review -e RATE=30 -e DURATION=5m stress.js
+```
+
+Nembak `GET /api/v1/review-dan-submit?idHeader=<uuid>` — endpoint cek kelengkapan
+yang **wajib `idHeader`** dan lumayan berat (agregasi statistik dokumen/kemasan/
+kontainer/barang + pungutan per section). Karena butuh record beneran, **isi dulu**
+`review_dan_submit.id_headers` di `targets.json` pakai 1+ UUID header aju yang
+**ada di DB dev** (minta ke dev). Skrip milih acak dari daftar itu. Kalau daftar
+kosong, mode ini nggak jalan.
 
 ---
 

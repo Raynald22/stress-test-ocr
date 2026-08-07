@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pengajuan>
+  <headerAju>
+    <nomorAju>12345678901234567890123456</nomorAju>
+    <kantorPabean>040300</kantorPabean>
+    <jenisDokumen>0207501</jenisDokumen>
+  </headerAju>
+  <transaksi>
+    <valuta>USD</valuta>
+    <ndpbm>15000</ndpbm>
+    <nilaiPabeanCif>2465.64</nilaiPabeanCif>
+  </transaksi>
+</pengajuan>

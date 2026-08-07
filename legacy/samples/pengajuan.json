@@ -1,0 +1,148 @@
+{
+  "pengajuan": {
+    "headerAju": [
+      {
+        "nomorAju": "12345678901234567890123456",
+        "kantorPabean": "040300",
+        "kodeKantor": "040300",
+        "jenisPib": "1",
+        "jenisImpor": "1",
+        "caraBayar": "1",
+        "tanggalPengajuan": "2026-08-05",
+        "jenisDokumen": "0207501"
+      }
+    ],
+    "transaksi": [
+      {
+        "valuta": "USD",
+        "ndpbm": 15000,
+        "jenisTransaksi": "KMD",
+        "nilaiPabeanCif": 2465.64,
+        "biayaPenambahan": 0,
+        "biayaPengurangan": 0,
+        "asuransi": "LN",
+        "nilaiAsuransi": 10,
+        "diskon": 0,
+        "beratKotor": 11,
+        "beratBersih": 10,
+        "incoterms": "FCA"
+      }
+    ],
+    "pengangkutan": [
+      {
+        "caraAngkut": "1",
+        "namaSaranaAngkut": "ZHONG GU JI NAN",
+        "nomorVoyage": "0QAHES",
+        "bendera": "CN",
+        "perkiraanTanggalTiba": "2026-08-06",
+        "kodeTutup": "11",
+        "nomorTutup": "005882",
+        "tanggalTutup": "2026-05-30",
+        "nomorPos": "0302",
+        "nomorSubPos": "0002",
+        "nomorSubsubPos": "0000"
+      }
+    ],
+    "pelabuhanDanTempatTimbun": [
+      {
+        "pelabuhanMuat": "CNSHA",
+        "pelabuhanTransit": null,
+        "pelabuhanTujuan": "IDTPP",
+        "tempatTimbun": "PRJP",
+        "lokasiPemeriksaan": null
+      }
+    ]
+  },
+  "kemasanDanKontainer": {
+    "kemasan": [
+      {
+        "seri": 1,
+        "jumlah": 2,
+        "jenisKemasan": "CT",
+        "merek": "SESUAI B/L"
+      }
+    ],
+    "kontainer": [
+      {
+        "seri": 1,
+        "nomorKontainer": "TCNU7843213",
+        "ukuran": "40",
+        "jenisMuatan": "8",
+        "tipe": "1",
+        "nomorSeal": "123"
+      }
+    ]
+  },
+  "dokumenLampiran": {
+    "dokumenLampiran": [
+      {
+        "seri": 1,
+        "kodeDokumen": "380",
+        "nomorDokumen": "INV-123",
+        "tanggal": "2026-08-05"
+      }
+    ]
+  },
+  "entitas": {
+    "entitas": [
+      {
+        "alamatEntitas": "JL.PROF.DR.SATRIO KAV.3-5",
+        "kodeEntitas": "1",
+        "kodeJenisIdentitas": "6",
+        "namaEntitas": "PT. L'OREAL INDONESIA",
+        "nomorIdentitas": "0019579333056000000000",
+        "seriEntitas": 1,
+        "npwp16": "0019579333056000"
+      },
+      {
+        "alamatEntitas": "NO.22 , ZI TENG STREET , SIP , 215021 , SUZHOU",
+        "kodeEntitas": "9",
+        "kodeNegara": "CN",
+        "namaEntitas": "BEAUTYCOS INTERNATIONAL CO.,LTD",
+        "seriEntitas": 3
+      }
+    ]
+  },
+  "barang": {
+    "barang": [
+      {
+        "cif": 17287.2,
+        "kodeNegaraAsal": "CN",
+        "merk": "LOREAL",
+        "pernyataanLartas": "Y",
+        "posTarif": "34013000",
+        "seriBarang": 1,
+        "tipe": "F8238403",
+        "uraian": "CRV HYDRATING CLEANSER 473ML ENG",
+        "kodeBarang": ""
+      }
+    ]
+  },
+  "karantina": {
+    "karantina": [
+      {
+        "kodeKantorKarantina": "3504",
+        "uptImpor": "3504"
+      }
+    ],
+    "karantinabarang": [
+      {
+        "seri": 1,
+        "kdhs": "09011130",
+        "uraian": "60 BAGS GREEN JAVA COFFEE ROBUSTA",
+        "jmlSatuan": "60000.0000",
+        "jnsSatuan": "KGM"
+      }
+    ]
+  },
+  "penanggungJawab": {
+    "penanggungJawab": [
+      {
+        "nama": "PPJK",
+        "jabatan": "AHLI PABEAN",
+        "kota": "JAKARTA",
+        "tanggal": "2026-08-05"
+      }
+    ]
+  }
+}

@@ -29,18 +29,34 @@ function headers() {
 }
 
 // Job metadata keys we expect on every getData response regardless of doc
-// type. Anything else present with a non-empty value counts as "the OCR
-// actually extracted something" — we don't know the exact per-doc-type
-// schema here (that's the service's business), so this is a schema-agnostic
-// sanity check, not full field validation.
+// type. Confirmed against the real server response (2026-08-13): a job can
+// end status=SUCCESS while still carrying a non-empty `errors` array and an
+// empty `result` (e.g. EMPTY_DOCUMENT — "no readable text"). So `errors`,
+// `error`, and `result` need explicit handling, not just "any non-meta field
+// counts as content" — that heuristic would have been fooled by `errors`
+// being present and non-empty.
 const META_FIELDS = new Set([
-  'status', 'progress', 'job_id', 'doc_type', 'filename',
-  'created_at', 'updated_at', 'min_io_key', 'error', 'message',
+  'status', 'progress', 'job_id', 'doc_type', 'filename', 'stage',
+  'document_index', 'document_total', 'current_file', 'document_count',
+  'processing_time_ms', 'created_at', 'updated_at', 'min_io_key', 'message',
 ]);
 function hasExtractedContent(data) {
   if (!data || typeof data !== 'object') return false;
+  // Explicit per-document failure signal takes priority: a non-empty
+  // `errors` array means at least one document did NOT get extracted,
+  // regardless of what the top-level `status` says.
+  if (Array.isArray(data.errors) && data.errors.length > 0) return false;
+  if (data.error) return false;
+  // `result` is where the actual extracted fields live; prefer it when
+  // present, but fall back to the generic scan for older/other doc-type
+  // shapes that may not use a `result` wrapper.
+  if ('result' in data) {
+    const r = data.result;
+    if (r === null || r === undefined) return false;
+    if (typeof r === 'object') return Object.keys(r).length > 0;
+  }
   return Object.keys(data).some((k) => {
-    if (META_FIELDS.has(k)) return false;
+    if (META_FIELDS.has(k) || k === 'result' || k === 'errors') return false;
     const v = data[k];
     if (v === null || v === undefined) return false;
     if (typeof v === 'string') return v.trim().length > 0;

@@ -1,0 +1,25 @@
+     ✓ POST /ocr/create -> 202
+     ✓ has job_id
+     ✓ job reached SUCCESS (not hang, not FAILED)
+     ✗ extracted result contains known invoice_number (correctness)
+      ↳  0% — ✓ 0 / ✗ 1
+     ✗ extracted result contains known total (correctness)
+      ↳  0% — ✓ 0 / ✗ 1
+
+     checks.........................: 60.00% ✓ 3        ✗ 2  
+     data_received..................: 32 kB  272 B/s
+     data_sent......................: 9.5 kB 82 B/s
+     http_req_blocked...............: avg=5.62ms   min=0s      med=0s      max=213.3ms  p(90)=0s       p(95)=78.04µs 
+     http_req_connecting............: avg=526.89µs min=0s      med=0s      max=20.02ms  p(90)=0s       p(95)=0s      
+     http_req_duration..............: avg=114.59ms min=30.02ms med=56.66ms max=720.32ms p(90)=177.94ms p(95)=584.66ms
+       { expected_response:true }...: avg=114.59ms min=30.02ms med=56.66ms max=720.32ms p(90)=177.94ms p(95)=584.66ms
+     http_req_failed................: 0.00%  ✓ 0        ✗ 38 
+     http_req_receiving.............: avg=148.58µs min=0s      med=0s      max=1.53ms   p(90)=532.38µs p(95)=534.2µs 
+     http_req_sending...............: avg=40.87µs  min=0s      med=0s      max=1.55ms   p(90)=0s       p(95)=0s      
+     http_req_tls_handshaking.......: avg=1.84ms   min=0s      med=0s      max=70.08ms  p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=114.4ms  min=30.02ms med=56.66ms max=720.32ms p(90)=177.94ms p(95)=584.31ms
+     http_reqs......................: 38     0.328737/s
+     iteration_duration.............: avg=1m55s    min=1m55s   med=1m55s   max=1m55s    p(90)=1m55s    p(95)=1m55s   
+     iterations.....................: 1      0.008651/s
+     vus............................: 1      min=1      max=1
+     vus_max........................: 1      min=1      max=1

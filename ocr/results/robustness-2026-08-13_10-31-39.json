@@ -1,0 +1,362 @@
+{
+  "metrics": {
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 2.173639534883721,
+        "min": 0,
+        "med": 0,
+        "max": 92.9323,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "http_req_sending": {
+      "contains": "time",
+      "values": {
+        "avg": 0.025788372093023256,
+        "min": 0,
+        "med": 0,
+        "max": 1.1089,
+        "p(90)": 0,
+        "p(95)": 0
+      },
+      "type": "trend"
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 17,
+        "fails": 0
+      }
+    },
+    "robustness_failed": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 5,
+        "rate": 0.04516346752223015
+      }
+    },
+    "robustness_success": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 0.027098080513338087,
+        "count": 3
+      }
+    },
+    "robustness_hang": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 8
+      },
+      "thresholds": {
+        "rate<0.01": {
+          "ok": true
+        }
+      }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 43,
+        "rate": 0.38840582069117924
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 1.4308116279069767,
+        "min": 0,
+        "med": 0,
+        "max": 61.5249,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 20463.055240000012,
+        "p(95)": 54117.37071999996,
+        "avg": 12300.881666666666,
+        "min": 41.6484,
+        "med": 3196.695,
+        "max": 87771.6862
+      }
+    },
+    "robustness_success_flagged": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 3,
+        "rate": 0.027098080513338087
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 11566,
+        "rate": 104.47213307242278
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 0,
+        "avg": 0.7178162790697674,
+        "min": 0,
+        "med": 0,
+        "max": 30.8661,
+        "p(90)": 0
+      }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.1086860465116279,
+        "min": 0,
+        "med": 0,
+        "max": 1.5544,
+        "p(90)": 0.4085600000000022,
+        "p(95)": 0.54148
+      }
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 39122,
+        "rate": 353.37703528093755
+      }
+    },
+    "iterations": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 9,
+        "rate": 0.08129424154001426
+      }
+    },
+    "vus": {
+      "contains": "default",
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 1
+      },
+      "type": "gauge"
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "passes": 1,
+        "fails": 42,
+        "rate": 0.023255813953488372
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 1298.7168,
+        "p(90)": 413.72821999999996,
+        "p(95)": 714.2901749999992,
+        "avg": 203.53449761904764,
+        "min": 42.8298,
+        "med": 106.24940000000001
+      }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 102.3605,
+        "max": 1298.1746,
+        "p(90)": 409.9556400000002,
+        "p(95)": 704.2711199999997,
+        "avg": 199.63523023255817,
+        "min": 41.6484
+      }
+    },
+    "http_req_duration": {
+      "contains": "time",
+      "values": {
+        "avg": 199.7697046511628,
+        "min": 41.6484,
+        "med": 102.3605,
+        "max": 1298.7168,
+        "p(90)": 409.9556400000002,
+        "p(95)": 704.7307499999997
+      },
+      "type": "trend"
+    },
+    "vus_max": {
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 1
+      },
+      "type": "gauge",
+      "contains": "default"
+    }
+  },
+  "root_group": {
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [],
+    "checks": [
+        {
+          "path": "::[corrupt_header] create accepted or cleanly rejected",
+          "id": "9e327483bb8cae32c776ad49369abcb0",
+          "passes": 1,
+          "fails": 0,
+          "name": "[corrupt_header] create accepted or cleanly rejected"
+        },
+        {
+          "name": "[corrupt_header] reached terminal state (no hang)",
+          "path": "::[corrupt_header] reached terminal state (no hang)",
+          "id": "e63b46ce3168ddce293ac54593744d19",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "name": "[truncated] create accepted or cleanly rejected",
+          "path": "::[truncated] create accepted or cleanly rejected",
+          "id": "6bfbbcd08d62f10f1e6fed92e7325046",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "path": "::[truncated] reached terminal state (no hang)",
+          "id": "b4bdc41cf23ab4e7bb90c0f3c4e220e9",
+          "passes": 1,
+          "fails": 0,
+          "name": "[truncated] reached terminal state (no hang)"
+        },
+        {
+          "name": "[garbage_bytes] create accepted or cleanly rejected",
+          "path": "::[garbage_bytes] create accepted or cleanly rejected",
+          "id": "a2702d5e41dd8f8f252c618c0a6363cb",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "path": "::[garbage_bytes] reached terminal state (no hang)",
+          "id": "af7efdb74d2164b41612931c64db9bba",
+          "passes": 1,
+          "fails": 0,
+          "name": "[garbage_bytes] reached terminal state (no hang)"
+        },
+        {
+          "name": "[empty_file] create accepted or cleanly rejected",
+          "path": "::[empty_file] create accepted or cleanly rejected",
+          "id": "367ed4098f86902457ca0c69880b7c9a",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "passes": 1,
+          "fails": 0,
+          "name": "[empty_file] reached terminal state (no hang)",
+          "path": "::[empty_file] reached terminal state (no hang)",
+          "id": "1a85a674f46711d3f61d93463fb9675b"
+        },
+        {
+          "name": "[content_type_mismatch] create accepted or cleanly rejected",
+          "path": "::[content_type_mismatch] create accepted or cleanly rejected",
+          "id": "8067165547d0368d42d995eafb6dfc5a",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "path": "::[content_type_mismatch] reached terminal state (no hang)",
+          "id": "5e4969da6ef38d8ece0592939e99e500",
+          "passes": 1,
+          "fails": 0,
+          "name": "[content_type_mismatch] reached terminal state (no hang)"
+        },
+        {
+          "name": "[oversized] create accepted or cleanly rejected",
+          "path": "::[oversized] create accepted or cleanly rejected",
+          "id": "71c5b92f91947c12eb3601e331be2492",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "name": "[blank_no_text] create accepted or cleanly rejected",
+          "path": "::[blank_no_text] create accepted or cleanly rejected",
+          "id": "9a073eea65794f5c838db6dc543a1e48",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "id": "8b3af86482125d1a2064cbcd66dea675",
+          "passes": 1,
+          "fails": 0,
+          "name": "[blank_no_text] reached terminal state (no hang)",
+          "path": "::[blank_no_text] reached terminal state (no hang)"
+        },
+        {
+          "id": "5849f496c53bb7e235c95c505284412d",
+          "passes": 1,
+          "fails": 0,
+          "name": "[many_pages] create accepted or cleanly rejected",
+          "path": "::[many_pages] create accepted or cleanly rejected"
+        },
+        {
+          "name": "[many_pages] reached terminal state (no hang)",
+          "path": "::[many_pages] reached terminal state (no hang)",
+          "id": "5154038bec33a9d010913489303b5b94",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "id": "b5a3319d7009416bfb78865c7c7415cf",
+          "passes": 1,
+          "fails": 0,
+          "name": "[encrypted] create accepted or cleanly rejected",
+          "path": "::[encrypted] create accepted or cleanly rejected"
+        },
+        {
+          "passes": 1,
+          "fails": 0,
+          "name": "[encrypted] reached terminal state (no hang)",
+          "path": "::[encrypted] reached terminal state (no hang)",
+          "id": "2f207ac404ffbc7f69c9b118eff9e6ff"
+        }
+      ]
+  },
+  "options": {
+    "noColor": false,
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": ""
+  },
+  "state": {
+    "isStdOutTTY": false,
+    "isStdErrTTY": false,
+    "testRunDurationMs": 110708.9485
+  }
+}

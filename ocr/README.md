@@ -64,9 +64,11 @@ saat kebanjiran, bukan tiba-tiba error/hang.
 | `negative.js` | Tes input salah di level API. |
 | `idempotency.js` | Tes kirim job yang sama 2x beruntun (duplicate submission). |
 | `robustness.js` | Tes file rusak (OCR gagal dengan rapi). |
+| `limits.js` | Tes correctness (data hasil OCR bener, bukan cuma "ada isinya") + tes limit 15 barang. |
 | `seed_min_io_keys.py` | (dev) nyiapin file uji ke MinIO + bikin `keys.json`. |
 | `chaos_probe.py` | (dev) pemandu tes ketahanan (matiin RabbitMQ/DB/dll). |
 | `summary.js` | Dipakai skrip lain buat auto-simpan hasil. Jangan dijalanin langsung. |
+| `FINDINGS.md` | Catatan bug/temuan dari hasil run terhadap server dev — cek ini sebelum lapor bug baru, siapa tahu sudah tercatat. |
 | `results/` | Tempat laporan hasil tersimpan otomatis. |
 | `keys.example.json` | Contoh bentuk `keys.json`. |
 
@@ -219,8 +221,10 @@ status akhir** (idealnya `FAILED`) dalam batas waktu — nggak boleh ada yang
 nge-hang. Skrip juga nampilin file mana yang malah `SUCCESS` (mencurigakan buat
 file sampah — layak dilaporin sebagai bug).
 
-> Catatan: file `oversized.pdf` ukurannya ~55MB dan bakal beneran di-OCR di
-> server, jadi lumayan berat. Wajar kalau lambat.
+> Catatan: file `oversized.pdf` ukurannya ~55MB. Per 2026-08-13 server
+> nolak file ini bersih di pintu masuk (`413 PAYLOAD_TOO_LARGE`), jadi
+> nggak nyampe masuk antrian OCR — kalau nanti perilakunya berubah lagi
+> (misal balik jadi hang), itu layak dilaporin ulang (lihat `FINDINGS.md`).
 
 Korpus file jelek sekarang juga termasuk 2 kasus PDF yang **valid secara
 struktur** tapi bermasalah dari sisi konten (bukan byte-nya yang rusak):
@@ -228,6 +232,41 @@ struktur** tapi bermasalah dari sisi konten (bukan byte-nya yang rusak):
 scan yang putih polos) dan `many_pages.pdf` (500 halaman — nguji ketahanan
 parser/pipeline terhadap dokumen yang tebal, beda dari `oversized.pdf` yang
 cuma 1 halaman digedein ukuran byte-nya).
+
+> **Penting** — `status: SUCCESS` di respons `getData` **nggak selalu berarti
+> datanya beneran tersimpan/valid**. Servicenya kadang nandain job
+> `SUCCESS` sambil tetap ngasih `errors: [...]` dan `result: {}` kosong
+> (misal `EMPTY_DOCUMENT`, `DB_WRITE_SKIPPED`). `smoke.js`/`robustness.js`
+> sudah nge-handle ini (`hasExtractedContent()` ngecek `errors[]`, bukan
+> cuma status) — tapi kalau kamu nulis skrip/integrasi baru, jangan cuma
+> cek `status === "SUCCESS"`. Detail lengkap ada di `FINDINGS.md`.
+
+---
+
+## Langkah 6.5 — Tes correctness + limit barang (`limits.js`)
+
+Beda dari skrip lain yang cuma ngecek "job selesai", ini ngecek **isinya
+bener apa nggak** — pakai 1 invoice sintetis yang isinya kita tahu persis
+(nomor invoice, tanggal, total, 30 baris barang):
+
+```bash
+# bikin 1 invoice ground-truth + upload ke MinIO -> keys_limits.json
+python seed_min_io_keys.py --limits \
+    --endpoint ALAMAT_MINIO:9000 --access-key KEY --secret-key SECRET --bucket ocr
+
+k6 run limits.js
+```
+
+Yang diuji:
+- **Correctness** — hasil ekstraksi beneran mengandung nomor invoice & total
+  yang kita kirim, bukan cuma "ada isinya".
+- **`EXTRACTION_MAX_ITEMS=15`** (batas jumlah barang per invoice, di
+  `ocr-service/.env`) — invoice sintetisnya sengaja punya 30 barang buat
+  ngecek batas ini beneran diberlakukan.
+
+> Temuan dari run 2026-08-13: batas 15 barang **ternyata nggak selalu
+> diberlakukan** untuk invoice yang "padat" (banyak barang tapi teksnya
+> pendek) — lihat `FINDINGS.md` poin #4 buat detailnya.
 
 ---
 

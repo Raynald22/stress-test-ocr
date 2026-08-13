@@ -1,0 +1,14 @@
+[
+  {
+    "filename": "ground_truth_invoice.pdf",
+    "min_io_key": "ocr-stress/9646ba926287446c8e260012b9262476-ground_truth_invoice.pdf",
+    "doc_type": "invoice",
+    "expected": {
+      "invoice_number": "INV-2026-QA-0001",
+      "total": "157500000",
+      "invoice_date": "13-08-2026",
+      "item_count_generated": 30,
+      "item_count_max_allowed": 15
+    }
+  }
+]

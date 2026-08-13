@@ -113,6 +113,71 @@ def _many_page_pdf(n_pages: int = 500) -> bytes:
     return _build_pdf(objs)
 
 
+def _pdf_escape(s: bytes) -> bytes:
+    return s.replace(b"\\", b"\\\\").replace(b"(", b"\\(").replace(b")", b"\\)")
+
+
+def _text_lines_pdf(lines: list[str], start_y: int = 750, line_height: int = 14) -> bytes:
+    """A valid, single-page PDF that draws each string in `lines` on its own
+    row, top to bottom. Used for documents that need real, known text content
+    (as opposed to `_minimal_pdf`'s single throwaway line)."""
+    parts = [b"BT /F1 11 Tf 72 %d Td" % start_y]
+    for i, line in enumerate(lines):
+        esc = _pdf_escape(line.encode("latin-1", "replace"))
+        if i == 0:
+            parts.append(b" (%s) Tj" % esc)
+        else:
+            parts.append(b" 0 %d Td (%s) Tj" % (-line_height, esc))
+    parts.append(b" ET")
+    stream = b"".join(parts)
+    objs = [
+        b"<</Type/Catalog/Pages 2 0 R>>",
+        b"<</Type/Pages/Kids[3 0 R]/Count 1>>",
+        b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]"
+        b"/Resources<</Font<</F1 5 0 R>>>>/Contents 4 0 R>>",
+        b"<</Length %d>>\nstream\n%s\nendstream" % (len(stream), stream),
+        b"<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>",
+    ]
+    return _build_pdf(objs)
+
+
+def _ground_truth_invoice(invoice_number: str, total: str, invoice_date: str,
+                          n_items: int) -> tuple[bytes, dict]:
+    """A structurally normal, VALID invoice PDF (not a defect case) whose
+    content we control exactly, so extraction results can be checked against
+    known values instead of just "is it non-empty". Also carries more than
+    EXTRACTION_MAX_ITEMS (15, per ocr-service .env) line items, to exercise
+    the chunked-extraction item cap without needing a real customs document.
+    Returns (pdf_bytes, expected_dict) — the expected dict is written into
+    the manifest entry so limits.js doesn't need to duplicate these values.
+
+    NOTE: `invoice_date` is required — found the hard way (2026-08-13 run):
+    omitting it makes the service extract fine but then skip the DB write
+    with code DB_WRITE_SKIPPED ("missing required field: tanggal_invoice"),
+    leaving `result` empty even though status stays SUCCESS. Both an English
+    and Indonesian label are included since the extractor's expected label
+    wasn't documented anywhere QA has access to."""
+    lines = [
+        "INVOICE",
+        f"Invoice Number: {invoice_number}",
+        f"Invoice Date: {invoice_date}",
+        f"Tanggal Invoice: {invoice_date}",
+        f"Total: {total}",
+        "Items:",
+    ]
+    for i in range(1, n_items + 1):
+        lines.append(f"{i}. ITEM-{i:03d}  description item number {i}  qty:{i}  price:{1000 * i}")
+    pdf = _text_lines_pdf(lines)
+    expected = {
+        "invoice_number": invoice_number,
+        "total": total,
+        "invoice_date": invoice_date,
+        "item_count_generated": n_items,
+        "item_count_max_allowed": 15,  # EXTRACTION_MAX_ITEMS in ocr-service/.env
+    }
+    return pdf, expected
+
+
 def _bad_corpus(size_mb: int = 55) -> list[tuple[str, bytes, str]]:
     """Malformed (or content-wise problematic) files the worker/OCR must reject
     *gracefully* (job FAILED with a clear error), not hang or crash on. Each:
@@ -180,6 +245,11 @@ def main() -> int:
                    help="generate the malformed-file corpus (corrupt/truncated/"
                         "garbage/empty/oversized/image-as-pdf/encrypted) for "
                         "robustness.js; writes keys_bad.json by default")
+    p.add_argument("--limits", action="store_true",
+                   help="generate one VALID ground-truth invoice PDF (known "
+                        "invoice number/total, >15 line items) for limits.js "
+                        "correctness + EXTRACTION_MAX_ITEMS checks; writes "
+                        "keys_limits.json by default")
     p.add_argument("--doc-type", default="invoice",
                    choices=["invoice", "packing_list", "bill_of_lading"],
                    help="default doc_type; per-file names containing "
@@ -207,6 +277,28 @@ def main() -> int:
         print(f"ERROR: bucket {args.bucket!r} not found at {args.endpoint}", file=sys.stderr)
         return 2
 
+    # --limits is handled separately since its manifest entry carries an
+    # `expected` dict (ground-truth values) instead of a `defect` label.
+    if args.limits:
+        pdf, expected = _ground_truth_invoice(
+            invoice_number="INV-2026-QA-0001", total="157500000",
+            invoice_date="13-08-2026", n_items=30)
+        out_path = args.out if args.out != "keys.json" else "keys_limits.json"
+        key = f"{args.prefix}/{uuid.uuid4().hex}-ground_truth_invoice.pdf"
+        client.put_object(args.bucket, key, __import__("io").BytesIO(pdf),
+                          length=len(pdf), content_type="application/pdf")
+        entry = {
+            "filename": "ground_truth_invoice.pdf",
+            "min_io_key": key,
+            "doc_type": "invoice",
+            "expected": expected,
+        }
+        Path(out_path).write_text(json.dumps([entry], indent=2))
+        print(f"  uploaded {key} ({len(pdf)} bytes) [ground_truth_invoice]")
+        print(f"\nWrote 1 key -> {out_path}")
+        print("Now run:  k6 run -e BASE_URL=... limits.js")
+        return 0
+
     # Gather (filename, bytes, defect) triples. defect="" means a normal/good file.
     payloads: list[tuple[str, bytes, str]] = []
     if args.bad:
@@ -219,11 +311,27 @@ def main() -> int:
         for f in pdfs:
             payloads.append((f.name, f.read_bytes(), ""))
     elif args.generate > 0:
+        # Include an invoice-date line (found the hard way, 2026-08-13): the
+        # old single-line "STRESS TEST ..." PDF has no date, so every job the
+        # service processes ends status=SUCCESS but with errors:[DB_WRITE_
+        # SKIPPED] ("missing required field: tanggal_invoice") and an empty
+        # result — the job never actually gets persisted. That silently
+        # invalidated every prior smoke/load/idempotency run's "success" (the
+        # extraction never had anywhere to land). Both an English and
+        # Indonesian date label are included for the same reason as
+        # _ground_truth_invoice: the extractor's expected label isn't
+        # documented anywhere QA has access to.
         for i in range(args.generate):
             name = f"{args.doc_type}_{i:04d}.pdf"
-            payloads.append((name, _minimal_pdf(f"STRESS TEST {args.doc_type} #{i}"), ""))
+            lines = [
+                f"STRESS TEST {args.doc_type} #{i}",
+                f"Invoice Number: STRESS-{i:04d}",
+                "Invoice Date: 13-08-2026",
+                "Tanggal Invoice: 13-08-2026",
+            ]
+            payloads.append((name, _text_lines_pdf(lines), ""))
     else:
-        print("ERROR: pass --source DIR, --generate N, or --bad", file=sys.stderr)
+        print("ERROR: pass --source DIR, --generate N, --bad, or --limits", file=sys.stderr)
         return 2
 
     # --bad defaults its output to keys_bad.json unless the user set --out.

@@ -45,6 +45,13 @@ export const options = {
 const hangRate      = new Rate('robustness_hang');          // job never reached terminal
 const gracefulFail  = new Counter('robustness_failed');     // ended FAILED (expected)
 const suspectPass   = new Counter('robustness_success');    // ended SUCCESS on junk (suspicious)
+// A job can end status=SUCCESS while still carrying a non-empty per-document
+// `errors` array and an empty `result` (confirmed against the real server,
+// e.g. EMPTY_DOCUMENT — "no readable text"). That's the service correctly
+// detecting the problem internally but not surfacing it as a terminal
+// FAILED — split that out from a genuine "SUCCESS on garbage" case.
+const successNoErrors = new Counter('robustness_success_clean');   // SUCCESS, no errors array — genuinely suspicious
+const successWithErrors = new Counter('robustness_success_flagged'); // SUCCESS, but errors[] present — status/errors mismatch
 
 function headers() {
   const h = { 'Content-Type': 'application/json' };
@@ -69,21 +76,34 @@ export default function () {
 
   const start = Date.now();
   let status = null;
+  let finalData = null;
   while ((Date.now() - start) / 1000 < MAX_WAIT_S) {
     sleep(POLL_INTERVAL_S);
     const res = http.get(`${BASE_URL}/ocr/getData/${jobId}`, { headers: headers() });
     if (res.status !== 200) continue;
     try { status = res.json('data.status'); } catch (_) { continue; }
-    if (status === 'SUCCESS' || status === 'FAILED') break;
+    if (status === 'SUCCESS' || status === 'FAILED') { finalData = res.json('data'); break; }
   }
 
   const hung = (status !== 'SUCCESS' && status !== 'FAILED');
   hangRate.add(hung);
   if (status === 'FAILED') gracefulFail.add(1);
-  if (status === 'SUCCESS') suspectPass.add(1);
+
+  let note = '';
+  if (status === 'SUCCESS') {
+    suspectPass.add(1);
+    const hasErrors = finalData && Array.isArray(finalData.errors) && finalData.errors.length > 0;
+    if (hasErrors) {
+      successWithErrors.add(1);
+      note = ` (errors[]: ${finalData.errors.map((e) => e.code).join(',')} — status/errors mismatch)`;
+    } else {
+      successNoErrors.add(1);
+      note = ' (no errors[] at all — genuinely suspicious)';
+    }
+  }
 
   check(status, {
     [`[${f.defect}] reached terminal state (no hang)`]: (s) => s === 'SUCCESS' || s === 'FAILED',
   });
-  console.log(`  ${f.defect.padEnd(22)} -> ${hung ? 'HANG/TIMEOUT ⚠' : status}`);
+  console.log(`  ${f.defect.padEnd(22)} -> ${hung ? 'HANG/TIMEOUT ⚠' : status}${note}`);
 }

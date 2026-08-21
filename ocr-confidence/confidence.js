@@ -1,7 +1,10 @@
 // ocr-confidence — records the OCR `confident_score` for each configured
-// document. NOT a load test: one VU, one pass, one OCR job PER document
-// (deliberately not batched like e2e-bc20/journey_ocr.js — batching multiple
-// docs into one job would make it unclear which score belongs to which file).
+// document. NOT a load test: one VU PER document, each doing one OCR job,
+// all running CONCURRENTLY (not looped sequentially in a single VU — with
+// enough documents that adds up past an SSO token's ~1h lifetime; see the
+// comment above `options` for the reasoning). Also deliberately not batched
+// like e2e-bc20/journey_ocr.js — batching multiple docs into one OCR job
+// would make it unclear which score belongs to which file.
 //
 // Ground truth on confident_score (from ocr-service source, app/scoring/
 // validator.py — not guessed from the frontend):
@@ -49,7 +52,7 @@ const MIN_CONFIDENCE = Number(__ENV.MIN_CONFIDENCE || 0); // 0 = watch disabled
 const DOC_GROUP = { invoice: 'invoices', packing_list: 'packing_lists', bill_of_lading: 'bill_of_lading' };
 
 // open every configured document once at init
-const DOCUMENTS = (CFG.documents || []).map((d) => ({
+const ALL_DOCUMENTS = (CFG.documents || []).map((d) => ({
   bin: open(`./${d.path}`, 'b'),
   name: d.path.split('/').pop(),
   path: d.path,
@@ -57,26 +60,56 @@ const DOCUMENTS = (CFG.documents || []).map((d) => ({
   dokumen: d.dokumen || 'Dokumen OCR',
 }));
 
+// Batching (-e BATCH_SIZE=N -e BATCH_INDEX=i): submitting everything at once
+// is safe on OUR side (parallel VUs don't accumulate client-side wait — see
+// the maxDuration comment below), but ocr-service's own real capacity is
+// limited regardless of how many jobs we submit at once — it's backed by ONE
+// shared Ollama/MinerU host, worker pool caps at 4, and the service's own
+// sizing assumption is a ~2 documents/minute drain rate (ocr-service .env
+// comments, RATE_LIMIT_DOCS_PER_MIN). Sending a large batch in one go just
+// makes the tail of the batch sit in ocr-service's internal queue longer
+// (showing up as false "Timeout" rows if MAX_WAIT_S isn't generous enough),
+// not process any faster. BATCH_SIZE/BATCH_INDEX let you split `documents`
+// into smaller chunks run one at a time (each with a fresh SSO_TOKEN if
+// needed) instead of hammering the queue with everything simultaneously.
+// Default (no batching): BATCH_SIZE = all documents, BATCH_INDEX = 0.
+const BATCH_SIZE = Number(__ENV.BATCH_SIZE || ALL_DOCUMENTS.length || 1);
+const BATCH_INDEX = Number(__ENV.BATCH_INDEX || 0);
+const TOTAL_BATCHES = Math.max(1, Math.ceil(ALL_DOCUMENTS.length / BATCH_SIZE));
+const DOCUMENTS = ALL_DOCUMENTS.slice(BATCH_INDEX * BATCH_SIZE, (BATCH_INDEX + 1) * BATCH_SIZE);
+if (DOCUMENTS.length === 0) {
+  throw new Error(`[ocr-confidence] BATCH_INDEX=${BATCH_INDEX} is out of range — ` +
+    `${ALL_DOCUMENTS.length} document(s) in config.json, BATCH_SIZE=${BATCH_SIZE} ` +
+    `gives ${TOTAL_BATCHES} batch(es) (valid BATCH_INDEX: 0..${TOTAL_BATCHES - 1}).`);
+}
+console.log(`[ocr-confidence] batch ${BATCH_INDEX + 1}/${TOTAL_BATCHES}: ` +
+  `${DOCUMENTS.length} document(s) — ${DOCUMENTS.map((d) => d.name).join(', ')}`);
+
 const ocrConfidence = new Trend('ocr_confidence_score', true);
 const ocrLowConfidence = new Rate('ocr_low_confidence'); // only meaningful if MIN_CONFIDENCE > 0
 const jobFailed = new Rate('ocr_job_failed');
 
-// Worst case: N documents, each up to MAX_WAIT_S polling — auto-detect docs
-// try 3 candidate types (3x the wait). k6's default shared-iterations
-// maxDuration is 10m, which is nowhere near enough once you have more than
-// a couple of documents — the run gets forcibly interrupted mid-iteration
-// and handleSummary/the report never fire. Size maxDuration off the actual
-// config instead of hardcoding a guess.
-const AUTO_COUNT = DOCUMENTS.filter((d) => d.docType === 'auto').length;
-const NORMAL_COUNT = DOCUMENTS.length - AUTO_COUNT;
-const WORST_CASE_S = (NORMAL_COUNT + AUTO_COUNT * 3) * (MAX_WAIT + 120) + 60; // +120s per attempt for upload/create overhead, +60s buffer
-const MAX_DURATION_S = Math.max(600, WORST_CASE_S);
+// Documents in THIS BATCH run ONE PER VU, IN PARALLEL (see default() below)
+// — not looped sequentially in a single VU. Sequential-in-one-VU was the
+// original design, but with enough documents (especially auto-detect ones,
+// 3x the work each) client-side wait alone adds up past an SSO token's ~1h
+// lifetime (documented the hard way — 9 documents, 2 auto-detect, took ~85
+// minutes sequential). Running them concurrently removes that client-side
+// accumulation. It does NOT remove ocr-service's own queueing (see the
+// BATCH_SIZE comment above) — that's what batching is for instead.
+//
+// maxDuration only needs to cover one VU's worst case now: a normal document
+// (1 attempt) or, if any document in this batch is auto-detect, up to 3
+// attempts.
+const HAS_AUTO = DOCUMENTS.some((d) => d.docType === 'auto');
+const ATTEMPTS_PER_DOC = HAS_AUTO ? 3 : 1;
+const MAX_DURATION_S = Math.max(300, ATTEMPTS_PER_DOC * (MAX_WAIT + 120) + 60); // +120s per attempt for upload/create overhead, +60s buffer
 
 export const options = {
   scenarios: {
     confidence: {
-      executor: 'shared-iterations',
-      vus: 1,
+      executor: 'per-vu-iterations',
+      vus: Math.max(1, DOCUMENTS.length),
       iterations: 1,
       maxDuration: `${MAX_DURATION_S}s`,
     },
@@ -322,35 +355,37 @@ function handleSingleTypeResult(doc, result) {
 }
 
 export default function () {
-  for (const doc of DOCUMENTS) {
-    group(`doc_${doc.name}`, () => {
-      let minIoKey = null, fname = doc.name;
+  // One VU = one document, running concurrently with every other VU (see
+  // the maxDuration/scenario comment above for why) — not a sequential loop.
+  const doc = DOCUMENTS[(__VU - 1) % DOCUMENTS.length];
 
-      group('upload', () => {
-        const fd = { file: http.file(doc.bin, doc.name, guessMime(doc.name)), createBy: CREATED, dokumen: doc.dokumen, version_dokumen: 'v1.0' };
-        const res = http.post(`${DS}/api/v1/upload/file`, fd, { headers: headers(), tags: { hop: 'upload' }, timeout: '120s' });
-        if (res.status < 200 || res.status >= 300) {
-          console.error(`[ocr-confidence] upload/file failed for ${doc.path}: ${res.status} ${String(res.body).slice(0, 200)}`);
-          return;
-        }
-        try {
-          const d = res.json();
-          minIoKey = pick(d, ['data.min_io_key', 'data.minio_key', 'data.key', 'data.path', 'min_io_key']);
-          fname = pick(d, ['data.filename', 'data.file_name', 'filename']) || doc.name;
-        } catch (_) {}
-      });
-      if (!minIoKey) { jobFailed.add(true); emitReportRow({ doc, jobId: null, status: 'upload_failed' }); return; }
+  group(`doc_${doc.name}`, () => {
+    let minIoKey = null, fname = doc.name;
 
-      if (doc.docType === 'auto') {
-        console.log(`[ocr-confidence] ${doc.path} -> uploaded (min_io_key=${minIoKey}), auto-detecting doc_type (3 attempts)...`);
-        runAutoDetect(doc, minIoKey, fname);
-      } else {
-        console.log(`[ocr-confidence] ${doc.path} -> uploaded (min_io_key=${minIoKey}), doc_type=${doc.docType}, polling up to ${MAX_WAIT}s...`);
-        const result = runOcrJob(doc, doc.docType, minIoKey, fname);
-        handleSingleTypeResult(doc, result);
+    group('upload', () => {
+      const fd = { file: http.file(doc.bin, doc.name, guessMime(doc.name)), createBy: CREATED, dokumen: doc.dokumen, version_dokumen: 'v1.0' };
+      const res = http.post(`${DS}/api/v1/upload/file`, fd, { headers: headers(), tags: { hop: 'upload' }, timeout: '120s' });
+      if (res.status < 200 || res.status >= 300) {
+        console.error(`[ocr-confidence] upload/file failed for ${doc.path}: ${res.status} ${String(res.body).slice(0, 200)}`);
+        return;
       }
+      try {
+        const d = res.json();
+        minIoKey = pick(d, ['data.min_io_key', 'data.minio_key', 'data.key', 'data.path', 'min_io_key']);
+        fname = pick(d, ['data.filename', 'data.file_name', 'filename']) || doc.name;
+      } catch (_) {}
     });
-  }
+    if (!minIoKey) { jobFailed.add(true); emitReportRow({ doc, jobId: null, status: 'upload_failed' }); return; }
+
+    if (doc.docType === 'auto') {
+      console.log(`[ocr-confidence] ${doc.path} -> uploaded (min_io_key=${minIoKey}), auto-detecting doc_type (3 attempts)...`);
+      runAutoDetect(doc, minIoKey, fname);
+    } else {
+      console.log(`[ocr-confidence] ${doc.path} -> uploaded (min_io_key=${minIoKey}), doc_type=${doc.docType}, polling up to ${MAX_WAIT}s...`);
+      const result = runOcrJob(doc, doc.docType, minIoKey, fname);
+      handleSingleTypeResult(doc, result);
+    }
+  });
 }
 
 export const handleSummary = makeSummary('confidence');

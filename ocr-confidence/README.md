@@ -9,6 +9,79 @@ ngukur kualitas ekstraksi.
 
 ---
 
+## Cara testing — langkah demi langkah
+
+Ringkasan praktis buat yang baru pertama kali pakai. Tiap langkah dijelasin
+lebih detail di section-section di bawah — ini cuma alur cepatnya.
+
+### 0. Setup (sekali aja)
+
+```bash
+cd ocr-confidence
+cp config.example.json config.json      # kalau belum ada config.json
+cd report && npm install && cd ..        # sekali aja, buat generate laporan nanti
+```
+
+Butuh **k6** ter-install ([panduan instalasi](https://grafana.com/docs/k6/latest/set-up/install-k6/)) dan **Node.js**.
+
+### 1. Siapin dokumen
+
+- Taruh file dokumen (PDF asli, bukan hasil generate) di `samples/`.
+- Edit `documents` di `config.json` — 1 baris per dokumen:
+  ```json
+  { "path": "samples/nama_file.pdf", "doc_type": "invoice", "dokumen": "Invoice (INV)" }
+  ```
+  `doc_type`: `invoice` / `packing_list` / `bill_of_lading` — atau `auto`
+  kalau gak yakin jenisnya (lihat section "Mode auto-detect" di bawah).
+
+### 2. Siapin SSO token
+
+Ambil token bearer dev yang fresh (tanya tim yang pegang akses dev/SSO).
+**Token cuma tahan ~1 jam** — jangan diambil jauh-jauh hari sebelum run.
+Jangan pernah taruh token di file manapun, cuma dipake langsung pas run
+(`-e SSO_TOKEN=...`).
+
+### 3. Jalanin
+
+**Dokumen sedikit (≤ 6, gak ada `auto`)** — langsung semua sekaligus:
+
+```bash
+k6 run -e SSO_TOKEN=<token-dev> confidence.js > run.log 2>&1
+```
+
+**Dokumen banyak (> 6, atau ada beberapa `auto`)** — pecah jadi batch (lihat
+section "Batch" di bawah kenapa ini penting, bukan cuma soal jumlah):
+
+```bash
+k6 run -e SSO_TOKEN=<token-dev> -e BATCH_SIZE=4 -e BATCH_INDEX=0 confidence.js > run-batch0.log 2>&1
+k6 run -e SSO_TOKEN=<token-dev> -e BATCH_SIZE=4 -e BATCH_INDEX=1 confidence.js > run-batch1.log 2>&1
+# ...ulangi, naikin BATCH_INDEX, sampai semua batch kelar
+```
+
+Tunggu sampai selesai (ada progress bar di terminal). Kalau layar diem lama,
+itu normal — OCR beneran butuh waktu, bukan macet (lihat "Kebanyakan hasilnya
+'Timeout'" di section Troubleshooting kalau ragu).
+
+### 4. Bikin laporan
+
+```bash
+node report/build-report.js run.log
+# atau, kalau tadi batch:
+node report/build-report.js run-batch0.log run-batch1.log
+```
+
+### 5. Baca hasilnya
+
+Buka `results/confidence-report-<timestamp>.xlsx` (atau `.docx`) — sheet
+**Summary** adalah yang pertama dicek: kolom **Status**, **Score**,
+**Completeness %**. Baris merah = gagal/belum kescore, ijo/kuning = udah
+dapet skor. Kalau ada yang **Timeout**, cek kolom **Detail**-nya dulu sebelum
+panik (lihat section troubleshooting di bawah).
+
+File `.xlsx`/`.docx` inilah yang dikasih ke dev sebagai bahan tuning.
+
+---
+
 ## Ground truth soal `confident_score`
 
 Dicek langsung dari source `ocr-service` (`app/scoring/validator.py`), bukan
@@ -52,21 +125,7 @@ secara teknis tim backend OCR **bisa** nambahin threshold kalau mereka mau
 
 ---
 
-## Setup
-
-```bash
-cd ocr-confidence
-cp config.example.json config.json
-```
-
-Isi `documents` di `config.json` — daftar dokumen yang mau dites, tiap entry:
-`path` (relatif ke folder ini), `doc_type` (`invoice`/`packing_list`/
-`bill_of_lading`/`auto`), `dokumen` (label buat upload, mis. `"Invoice (INV)"`).
-Ada 1 contoh (`samples/invoice_sample.pdf`) buat starter — **idealnya diganti
-dokumen asli**, soalnya dokumen sintetis bisa dapet skor aneh di pengecekan
-grounding (isinya emang didesain minimal).
-
-### Mode auto-detect (`doc_type: "auto"`)
+## Mode auto-detect (`doc_type: "auto"`)
 
 Buat dokumen yang jenisnya gak jelas dari nama file (mis. hasil scan dengan
 nama generik, gak ada text layer buat dibaca manual) — tandain
@@ -93,27 +152,68 @@ banyak beban ke OCR service dibanding dokumen yang udah jelas jenisnya) —
 jangan pakein ke semua dokumen kalau jenisnya udah ketauan, cukup buat yang
 beneran gak jelas.
 
-## Jalanin
+---
 
-**Penting: tangkep OUTPUT LENGKAPNYA ke file** (bukan cuma diliat di layar),
-soalnya laporan Excel/Word dibikin dari situ:
-
-```bash
-k6 run -e SSO_TOKEN=<bearer> confidence.js > run.log 2>&1
-```
+## Paralel & Batch — kenapa, dan kapan perlu batch
 
 Satu dokumen = satu OCR job sendiri (**beda dari `e2e-bc20/journey_ocr.js`**
 yang nggabung semua dokumen 1 submission jadi 1 job — di sini sengaja
 dipisah biar skornya jelas ketauan punya dokumen mana).
 
-`maxDuration` dihitung otomatis dari jumlah dokumen di `config.json` (worst
-case: tiap dokumen non-auto sampai `MAX_WAIT_S`, dokumen `auto` sampai 3x
-itu) — jadi run **gak akan keputus paksa** di tengah biarpun banyak dokumen.
-Kalau dokumennya banyak/lambat, ini bisa makan waktu lama — sabar, atau
-turunin `-e MAX_WAIT_S=90` (default 300) biar dokumen yang macet gak nunggu
-kelamaan.
+**Semua dokumen diproses PARALEL, bukan satu-satu** — 1 VU per dokumen,
+jalan bareng (`vus = jumlah dokumen`). Ini sengaja, biar total waktu run
+gak numpuk jadi jumlah semua dokumen (yang gampang ngelewatin umur token SSO
+~1 jam kalau dokumennya banyak) — total waktu jadi kira-kira cuma setara
+**dokumen paling lambat**, bukan jumlah semuanya. Contoh: 4 dokumen @
+`MAX_WAIT_S=900` selesai dalam ~18 menit (bukan berjam-jam), aman jauh di
+bawah 1 jam.
 
-### Kalau kebanyakan hasilnya "Timeout"
+`maxDuration` dihitung otomatis (worst case: 1 dokumen sampai `MAX_WAIT_S`,
+atau 3x itu kalau ada dokumen `auto` di `config.json`) — jadi run **gak akan
+keputus paksa** di tengah.
+
+**Paralel di sisi kita gak berarti paralel di sisi `ocr-service`.** Dicek
+langsung ke source-nya: worker pool di backend mulai dari **1 proses**, naik
+bertahap sampai maksimal **4**, dan concurrency asli ke Qwen/Ollama (tahap
+ekstraksi) dibatasi ke **4 juga** — itu pun ke 1 server Ollama yang dipakai
+bareng. Dokumentasi resmi backend-nya sendiri nyebut **drain rate cuma ~2
+dokumen/menit**. Jadi ngirim banyak dokumen sekaligus **gak bikin backend-nya
+proses lebih cepet** — dokumen di "ujung antrian" cuma nunggu lebih lama,
+dan kalau `MAX_WAIT_S` gak cukup gede buat nutupin waktu antri itu, bakal
+keliatan sebagai "Timeout" padahal sebenernya cuma masih ngantri. Solusinya:
+**batch** — lihat section di bawah.
+
+### Batch (buat dokumen banyak)
+
+Kalau `documents` di `config.json` banyak (mis. >6-8), jangan jalanin
+sekaligus — pecah jadi beberapa batch pakai `-e BATCH_SIZE=` dan
+`-e BATCH_INDEX=` (0-based):
+
+```bash
+k6 run -e SSO_TOKEN=<bearer> -e BATCH_SIZE=4 -e BATCH_INDEX=0 confidence.js > run-batch0.log 2>&1
+k6 run -e SSO_TOKEN=<bearer> -e BATCH_SIZE=4 -e BATCH_INDEX=1 confidence.js > run-batch1.log 2>&1
+k6 run -e SSO_TOKEN=<bearer> -e BATCH_SIZE=4 -e BATCH_INDEX=2 confidence.js > run-batch2.log 2>&1
+```
+
+Script bakal nge-print di awal batch keberapa/dari-berapa dan dokumen mana
+aja yang lagi diproses (`[ocr-confidence] batch 1/3: 4 document(s) — ...`).
+Kalau `BATCH_INDEX` di luar jangkauan, langsung error jelas (bukan diem-diem
+gak ngapa-ngapain).
+
+Token SSO boleh beda-beda tiap batch (ambil fresh sebelum tiap batch kalau
+mau aman) — gak masalah, tiap batch itu proses k6 yang independen.
+
+Habis semua batch selesai, gabung semua log-nya jadi **satu laporan**:
+
+```bash
+node report/build-report.js run-batch0.log run-batch1.log run-batch2.log
+```
+
+---
+
+## Troubleshooting
+
+### Kebanyakan hasilnya "Timeout"
 
 OCR pipeline-nya (MinerU/Docling buat baca teks + Qwen via Ollama buat
 ekstraksi) itu **self-hosted**, bukan API cloud yang cepet — buat dokumen
@@ -131,7 +231,7 @@ Kalau isinya nunjuk banyak `non-200` atau `http terakhir` bukan 200, berarti
 ada masalah lain (network/auth/service down) yang perlu dicek terpisah,
 bukan soal waktu tunggu doang.
 
-Buat lihat skor tiap dokumen langsung dari log:
+### Cek skor per-dokumen langsung dari log (tanpa nunggu laporan)
 
 ```bash
 grep OCR_CONFIDENCE run.log
@@ -143,8 +243,10 @@ Contoh baris output:
 OCR_CONFIDENCE file=samples/invoice_sample.pdf doc_type=invoice job_id=abc-123 score=87.5
 ```
 
-Pengaturan (`-e NAMA=nilai`): `POLL_INTERVAL_S`, `MAX_WAIT_S`,
-`DATA_SERVICE_URL`/`OCR_URL` (override base URL).
+### Semua pengaturan (`-e NAMA=nilai`)
+
+`POLL_INTERVAL_S`, `MAX_WAIT_S`, `DATA_SERVICE_URL`/`OCR_URL` (override base
+URL), `BATCH_SIZE`/`BATCH_INDEX` (lihat section "Batch" di atas).
 
 ### Watch value opsional (bukan aturan resmi)
 
@@ -182,6 +284,8 @@ npm install
 
 ```bash
 node report/build-report.js run.log
+# atau gabung beberapa batch jadi 1 laporan (lihat section "Batch"):
+node report/build-report.js run-batch0.log run-batch1.log run-batch2.log
 ```
 
 Ini bikin 2 file di `results/`:
@@ -228,8 +332,8 @@ Isi laporan (kedua format sama):
 - **Kolom/baris Detail** (khusus dokumen yang timeout) — nunjukin berapa kali
   polling, berapa yang non-200, dan status job terakhir yang keliatan
   (mis. `"processing"`) sebelum nyerah. Bantu misahin "job-nya emang masih
-  diproses" dari "ada yang error diem-diem" — lihat section "Kalau
-  kebanyakan hasilnya Timeout" di atas.
+  diproses" dari "ada yang error diem-diem" — lihat section "Kebanyakan
+  hasilnya 'Timeout'" (Troubleshooting) di atas.
 
 **Batasan yang ditulis eksplisit di tiap laporan**: breakdown per-field mana
 yang gak "grounded" (gak match teks OCR asli) **gak bisa direkonstruksi**

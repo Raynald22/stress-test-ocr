@@ -17,6 +17,11 @@
 //   k6 run -e SSO_TOKEN=<bearer> confidence.js > run.log 2>&1   (or | tee run.log)
 //   node build-report.js run.log [output-basename]
 //
+// Multiple logs (e.g. one per BATCH_INDEX -- see confidence.js's batching
+// support) merge into ONE combined report:
+//   node build-report.js run-batch0.log run-batch1.log run-batch2.log
+//   node build-report.js run-batch0.log run-batch1.log --out=full-run
+//
 // Output: ../results/<basename>.xlsx and ../results/<basename>.docx
 // (basename defaults to a timestamp if not given).
 
@@ -390,19 +395,31 @@ async function buildDocx(rows, outPath) {
 // ---- main -------------------------------------------------------------
 
 async function main() {
-  const logPath = process.argv[2];
-  if (!logPath) {
-    console.error('Usage: node build-report.js <run.log> [output-basename]');
+  const args = process.argv.slice(2);
+  const outFlag = args.find((a) => a.startsWith('--out='));
+  const logPaths = args.filter((a) => !a.startsWith('--out='));
+  // backwards-compat: `node build-report.js run.log some-name` (positional
+  // basename, no --out=) still works as long as only one log is given.
+  const legacyBasename = logPaths.length === 2 && !outFlag ? logPaths.pop() : null;
+
+  if (logPaths.length === 0) {
+    console.error('Usage: node build-report.js <run.log> [more.log ...] [--out=name]');
     process.exit(1);
   }
+
   const ts = new Date().toISOString().replace('T', '_').replace(/[:.]/g, '-').slice(0, 19);
-  const basename = process.argv[3] || `confidence-report-${ts}`;
+  const basename = (outFlag ? outFlag.slice('--out='.length) : legacyBasename) || `confidence-report-${ts}`;
   const resultsDir = path.join(__dirname, '..', 'results');
   fs.mkdirSync(resultsDir, { recursive: true });
 
-  const rawRows = parseLogFile(logPath);
+  let rawRows = [];
+  for (const logPath of logPaths) {
+    const found = parseLogFile(logPath);
+    console.log(`${logPath}: ${found.length} REPORT_ROW line(s)`);
+    rawRows = rawRows.concat(found);
+  }
   if (rawRows.length === 0) {
-    console.error(`No REPORT_ROW lines found in ${logPath}. Did the k6 run actually process any documents? ` +
+    console.error(`No REPORT_ROW lines found in ${logPaths.join(', ')}. Did the k6 run(s) actually process any documents? ` +
       `(Capture the FULL k6 output, e.g. "k6 run ... confidence.js > run.log 2>&1", not just stderr.)`);
     process.exit(1);
   }

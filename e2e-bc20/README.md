@@ -316,6 +316,14 @@ konkuren, bukan cuma 1x.
   Kalau ternyata beda, gampang ditambah di `lib.js` fungsi `pick`.
 - **Insert-only / nambah data** — jalanin ke dev, dan kabarin dev buat mantau DB
   (pool koneksi, lock) + Temporal/queue OCR pas journey OCR jalan.
+- **`negative.js` check `auth_no_token`/`auth_bad_token` diprediksi GAGAL di env dev saat ini** —
+  `GET /referensi/jenis-pib` tanpa token / token asal balik `200`, bukan `401`/`403`.
+  Ini bukan bug script: `kepabeanan-data-service` sengaja mematikan `ApiKeyGuard`
+  sementara (`src/app.module.ts`, komentar "TEMPORARY: API key auth disabled"),
+  sama seperti yang sudah dicatat di `data-service/README.md`. Assertion-nya
+  **sengaja dibiarkan ketat** (`[401,403]`) supaya begitu auth dinyalain lagi
+  upstream, test ini otomatis lolos — kalau nanti malah gagal dengan cara lain,
+  baru itu regresi beneran yang layak dilaporin.
 
 ## Belum dicakup
 

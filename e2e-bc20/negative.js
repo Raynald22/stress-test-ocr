@@ -57,6 +57,13 @@ function assertStatus(res, allowed, label) {
 }
 
 export default function () {
+  // KNOWN GAP, not a script bug: data-service's ApiKeyGuard is currently
+  // commented out (kepabeanan-data-service/src/app.module.ts, "TEMPORARY:
+  // API key auth disabled" — see also data-service/README.md "Auth lagi
+  // DIMATIKAN"). These two checks are EXPECTED to fail (200 instead of
+  // 401/403) until that guard is re-enabled upstream. Keep asserting
+  // [401,403] — that's the target behavior — don't weaken it to include 200,
+  // or this stops catching a regression if auth gets re-enabled and breaks.
   group('auth_no_token', () => {
     const res = http.get(`${DS}/api/v1/referensi/jenis-pib`, { headers: noAuthHeaders() });
     assertStatus(res, [401, 403], 'GET /referensi/jenis-pib (no token)');

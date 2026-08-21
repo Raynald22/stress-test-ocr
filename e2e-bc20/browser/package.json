@@ -1,0 +1,15 @@
+{
+  "name": "e2e-bc20-browser",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Playwright browser journey for BC2.0 FE validation (few users, not load).",
+  "scripts": {
+    "install:browsers": "playwright install chromium",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  }
+}

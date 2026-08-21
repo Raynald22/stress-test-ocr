@@ -1,0 +1,4 @@
+This is plain text content saved with an .xlsx extension. It is not a valid
+zip/OOXML file at all — used by robustness.js to check that HPC's excel
+upload endpoint rejects it with a real 4xx instead of hanging or silently
+accepting it as a valid BC2.0 template.

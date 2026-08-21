@@ -1,0 +1,27 @@
+{
+  "_comment": [
+    "Config E2E BC2.0 (alur FE). Salin jadi config.json, sesuaikan.",
+    "SSO token WAJIB — jangan taruh di file ini; kasih lewat -e SSO_TOKEN=... waktu jalan.",
+    "base_url tiap service sudah default ke dev; override kalau perlu.",
+    "jenis_dokumen: kode dokumen BC2.0 (tanya dev, mis. 0207501).",
+    "excel_template: file .xlsx BC2.0 VALID dari dev (relatif ke folder e2e-bc20/).",
+    "ocr_files: dokumen buat di-OCR (invoice/packing list/BL) — relatif ke folder ini."
+  ],
+  "base_urls": {
+    "data_service": "https://dev-backend.insw.go.id/kepabeanan-data-service",
+    "hpc": "https://dev-backend.insw.go.id/kepabeanan-hpc",
+    "ocr": "https://dev-backend.insw.go.id/kepabeanan-ocr"
+  },
+  "jenis_dokumen": "0207501",
+  "created_by": "qa-e2e",
+  "excel": {
+    "template": "samples/bc20_template.xlsx"
+  },
+  "ocr": {
+    "files": [
+      { "path": "samples/invoice_sample.pdf", "slot": "inv", "type": "invoices", "dokumen": "Invoice (INV)" }
+    ],
+    "poll_interval_s": 3,
+    "max_wait_s": 300
+  }
+}

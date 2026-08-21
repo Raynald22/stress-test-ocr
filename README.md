@@ -1,8 +1,9 @@
 # QA Stress Tests — Kepabeanan
 
-Folder ini isinya alat **stress/load test** buat empat service kepabeanan yang
-beda karakternya. Masing-masing dipisah ke sub-folder sendiri karena **cara
-ngetesnya beda** — jangan dicampur.
+Folder ini isinya alat **stress/load test** buat service-service kepabeanan yang
+beda karakternya, plus satu suite **end-to-end BC2.0** yang niru alur FE lintas
+service. Masing-masing dipisah ke sub-folder sendiri karena **cara ngetesnya
+beda** — jangan dicampur.
 
 | Folder | Service | Model | Yang diukur |
 |---|---|---|---|
@@ -10,6 +11,7 @@ ngetesnya beda** — jangan dicampur.
 | [`hpc/`](./hpc/) | **kepabeanan-hpc** | **Sinkron** (1 request → 1 response) | Latency (p95) & throughput (req/detik), Excel upload |
 | [`data-service/`](./data-service/) | **kepabeanan-data-service** | **Sinkron** (1 request → 1 response) | Latency (p95) & throughput; baca ter-cache (Redis) vs DB, bundle POST, generateNomorAju |
 | [`legacy/`](./legacy/) | **kepabeanan-legacy** (Legacy Bridge Platform) | **Sinkron** (+ async Temporal, belum dites) | Latency & throughput di bawah **rate limit 50 rps**, validasi/transform, perilaku limiter (429) |
+| [`e2e-bc20/`](./e2e-bc20/) | **Alur FE BC2.0** (lintas data-service + HPC + OCR) | **End-to-end** (rantai request, ID nyambung) | Waktu perjalanan utuh + per-hop; jalur Excel & OCR; butuh SSO token |
 
 ## Bedanya di mana (penting)
 
@@ -104,6 +106,20 @@ k6 run negative.js                                                # input salah
 > Kalau auth di service dinyalain lagi, tambah `-e API_KEY=...` (data-service:
 > `1n5w2026#`; legacy: `-e API_KEY=<key> -e TENANT=<tenant>`). Kalau mau nembak
 > env selain dev, tambah `-e BASE_URL=...`.
+
+## Cara pakai — End-to-End BC2.0 (`e2e-bc20/`)
+
+Niru alur FE lintas 3 service. **Butuh SSO token**, dan **nulis data (dev only)**.
+
+```bash
+cd e2e-bc20
+cp config.example.json config.json   # isi jenis_dokumen + template xlsx BC2.0 dari dev
+k6 run -e SSO_TOKEN=<bearer> smoke.js                              # cek 3 backend + token (read-only)
+k6 run -e SSO_TOKEN=<bearer> -e VUS=5 -e DURATION=3m journey_excel.js   # jalur Excel
+k6 run -e SSO_TOKEN=<bearer> -e VUS=2 -e DURATION=10m journey_ocr.js    # jalur OCR (lambat)
+# validasi FE (browser, beberapa user):
+cd browser && npm install && npm run install:browsers && FE_URL=<url> SSO_TOKEN=<bearer> npm test
+```
 
 ---
 

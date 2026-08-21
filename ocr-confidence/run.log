@@ -1,0 +1,208 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: confidence.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 1h9m30s max duration (incl. graceful stop):
+              * confidence: 1 iterations shared among 1 VUs (maxDuration: 1h9m0s, gracefulStop: 30s)
+
+time="2026-08-21T17:14:43+07:00" level=info msg="[ocr-confidence] samples/INV.PDF -> uploaded (min_io_key=upload/93b7c07c-43ec-41a7-b534-818e0a6f1c25-INV.PDF), doc_type=invoice, polling up to 900s..." source=console
+
+running (0h00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m01.0s/1h9m0s  0/1 shared iters
+
+running (0h00m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m02.0s/1h9m0s  0/1 shared iters
+
+running (0h00m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m03.0s/1h9m0s  0/1 shared iters
+
+running (0h00m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m04.0s/1h9m0s  0/1 shared iters
+
+running (0h00m05.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m05.0s/1h9m0s  0/1 shared iters
+
+running (0h00m06.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m06.0s/1h9m0s  0/1 shared iters
+
+running (0h00m07.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m07.0s/1h9m0s  0/1 shared iters
+
+running (0h00m08.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m08.0s/1h9m0s  0/1 shared iters
+
+running (0h00m09.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m09.0s/1h9m0s  0/1 shared iters
+
+running (0h00m10.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m10.0s/1h9m0s  0/1 shared iters
+
+running (0h00m11.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m11.0s/1h9m0s  0/1 shared iters
+
+running (0h00m12.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m12.0s/1h9m0s  0/1 shared iters
+
+running (0h00m13.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m13.0s/1h9m0s  0/1 shared iters
+
+running (0h00m14.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m14.0s/1h9m0s  0/1 shared iters
+
+running (0h00m15.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m15.0s/1h9m0s  0/1 shared iters
+
+running (0h00m16.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m16.0s/1h9m0s  0/1 shared iters
+
+running (0h00m17.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m17.0s/1h9m0s  0/1 shared iters
+
+running (0h00m18.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m18.0s/1h9m0s  0/1 shared iters
+
+running (0h00m19.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m19.0s/1h9m0s  0/1 shared iters
+
+running (0h00m20.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m20.0s/1h9m0s  0/1 shared iters
+
+running (0h00m21.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m21.0s/1h9m0s  0/1 shared iters
+
+running (0h00m22.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m22.0s/1h9m0s  0/1 shared iters
+
+running (0h00m23.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m23.0s/1h9m0s  0/1 shared iters
+
+running (0h00m24.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m24.0s/1h9m0s  0/1 shared iters
+
+running (0h00m25.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m25.0s/1h9m0s  0/1 shared iters
+
+running (0h00m26.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m26.0s/1h9m0s  0/1 shared iters
+
+running (0h00m27.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m27.0s/1h9m0s  0/1 shared iters
+
+running (0h00m28.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m28.0s/1h9m0s  0/1 shared iters
+
+running (0h00m29.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m29.0s/1h9m0s  0/1 shared iters
+
+running (0h00m30.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m30.0s/1h9m0s  0/1 shared iters
+
+running (0h00m31.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m31.0s/1h9m0s  0/1 shared iters
+
+running (0h00m32.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m32.0s/1h9m0s  0/1 shared iters
+
+running (0h00m33.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m33.0s/1h9m0s  0/1 shared iters
+
+running (0h00m34.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m34.0s/1h9m0s  0/1 shared iters
+
+running (0h00m35.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m35.0s/1h9m0s  0/1 shared iters
+
+running (0h00m36.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m36.0s/1h9m0s  0/1 shared iters
+
+running (0h00m37.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m37.0s/1h9m0s  0/1 shared iters
+
+running (0h00m38.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m38.0s/1h9m0s  0/1 shared iters
+
+running (0h00m39.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m39.0s/1h9m0s  0/1 shared iters
+
+running (0h00m40.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m40.0s/1h9m0s  0/1 shared iters
+
+running (0h00m41.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m41.0s/1h9m0s  0/1 shared iters
+
+running (0h00m42.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m42.0s/1h9m0s  0/1 shared iters
+
+running (0h00m43.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m43.0s/1h9m0s  0/1 shared iters
+
+running (0h00m44.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m44.0s/1h9m0s  0/1 shared iters
+
+running (0h00m45.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m45.0s/1h9m0s  0/1 shared iters
+
+running (0h00m46.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m46.0s/1h9m0s  0/1 shared iters
+
+running (0h00m47.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m47.0s/1h9m0s  0/1 shared iters
+
+running (0h00m48.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m48.0s/1h9m0s  0/1 shared iters
+
+running (0h00m49.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m49.0s/1h9m0s  0/1 shared iters
+
+running (0h00m50.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m50.0s/1h9m0s  0/1 shared iters
+
+running (0h00m51.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m51.0s/1h9m0s  0/1 shared iters
+
+running (0h00m52.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m52.0s/1h9m0s  0/1 shared iters
+
+running (0h00m53.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m53.0s/1h9m0s  0/1 shared iters
+
+running (0h00m54.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m54.0s/1h9m0s  0/1 shared iters
+
+running (0h00m55.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m55.0s/1h9m0s  0/1 shared iters
+
+running (0h00m56.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m56.0s/1h9m0s  0/1 shared iters
+
+running (0h00m57.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m57.0s/1h9m0s  0/1 shared iters
+
+running (0h00m58.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m58.0s/1h9m0s  0/1 shared iters
+
+running (0h00m59.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h00m59.0s/1h9m0s  0/1 shared iters
+
+running (0h01m00.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h01m00.0s/1h9m0s  0/1 shared iters
+
+running (0h01m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h01m01.0s/1h9m0s  0/1 shared iters
+
+running (0h01m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h01m02.0s/1h9m0s  0/1 shared iters
+
+running (0h01m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h01m03.0s/1h9m0s  0/1 shared iters
+
+running (0h01m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+confidence   [   0% ] 1 VUs  0h01m04.0s/1h9m0s  0/1 shared iters

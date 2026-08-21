@@ -48,9 +48,9 @@
     "/api/v1/ikb"
   ],
   "review_dan_submit": {
-    "_comment": "MODE=review. Endpoint WAJIB idHeader (UUID yang ADA di DB dev). Isi id_headers dgn 1+ UUID valid dari dev — kalau kosong, MODE=review nggak jalan.",
+    "_comment": "MODE=review. Endpoint WAJIB idPermohonan (UUID yang ADA di DB dev). Isi id_permohonans dgn 1+ UUID valid dari dev — kalau kosong, MODE=review nggak jalan.",
     "path": "/api/v1/review-dan-submit",
-    "id_headers": [
+    "id_permohonans": [
       "00000000-0000-0000-0000-000000000000"
     ]
   },

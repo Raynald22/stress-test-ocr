@@ -1,0 +1,5 @@
+confidence.js://   k6 run -e SSO_TOKEN=<bearer> confidence.js 2>&1 | grep OCR_CONFIDENCE
+confidence.js:    console.log(`OCR_CONFIDENCE file=${doc.path} doc_type=${winner.docType} (auto-detected${ambiguous ? ', AMBIGUOUS' : ''}) job_id=${winner.jobId} score=${winner.score}`);
+confidence.js:    console.log(`OCR_CONFIDENCE file=${doc.path} doc_type=${doc.docType} job_id=${result.jobId} score=${result.score}`);
+confidence.js:    console.log(`OCR_CONFIDENCE file=${doc.path} doc_type=${doc.docType} job_id=${result.jobId} score=NONE (no scored record — likely skipped, e.g. missing required field)`);
+confidence.js:    console.warn(`OCR_CONFIDENCE file=${doc.path} doc_type=${doc.docType} job_id=${result.jobId} score=MISSING (confident_score not found on record)`);

@@ -1,0 +1,94 @@
+     █ doc_Commercial Invoice 8000043145.PDF
+
+       █ upload
+
+     █ doc_INV.PDF
+
+       █ upload
+
+       █ ocr_create_invoice
+
+       █ ocr_poll_invoice
+
+     █ doc_Invoice Banyak.pdf
+
+       █ upload
+
+       █ ocr_create_invoice
+
+       █ ocr_poll_invoice
+
+     █ doc_MT1527_Switch invoice_DICV for CHC.pdf
+
+       █ upload
+
+       █ ocr_create_invoice
+
+       █ ocr_poll_invoice
+
+     █ doc_Packing List Banyak.pdf
+
+       █ upload
+
+       █ ocr_create_packing_list
+
+       █ ocr_poll_packing_list
+
+     █ doc_BL Banyak.pdf
+
+       █ upload
+
+       █ ocr_create_bill_of_lading
+
+       █ ocr_poll_bill_of_lading
+
+     █ doc_0202060 sho[2].PDF
+
+       █ upload
+
+       █ ocr_create_invoice
+
+       █ ocr_poll_invoice
+
+       █ ocr_create_packing_list
+
+       █ ocr_poll_packing_list
+
+       █ ocr_create_bill_of_lading
+
+       █ ocr_poll_bill_of_lading
+
+     █ doc_AEDE1167SS-I.pdf
+
+       █ upload
+
+       █ ocr_create_invoice
+
+       █ ocr_poll_invoice
+
+       █ ocr_create_packing_list
+
+       █ ocr_poll_packing_list
+
+       █ ocr_create_bill_of_lading
+
+       █ ocr_poll_bill_of_lading
+
+     data_received..................: 235 kB  221 B/s
+     data_sent......................: 15 MB   15 kB/s
+     group_duration.................: avg=55.88s   min=61.52ms med=1m0s     max=4m33s    p(90)=1m31s    p(95)=1m58s   
+     http_req_blocked...............: avg=324.85µs min=0s      med=0s       max=45.95ms  p(90)=0s       p(95)=0s      
+     http_req_connecting............: avg=65.91µs  min=0s      med=0s       max=14.66ms  p(90)=0s       p(95)=0s      
+     http_req_duration..............: avg=308.97ms min=61.52ms med=122.01ms max=1m0s     p(90)=154ms    p(95)=170.02ms
+       { expected_response:true }...: avg=131.68ms min=61.52ms med=121.99ms max=653.11ms p(90)=153.53ms p(95)=166.92ms
+     http_req_failed................: 0.29%   ✓ 1        ✗ 337
+     http_req_receiving.............: avg=100.66µs min=0s      med=0s       max=1.78ms   p(90)=477.86µs p(95)=543.23µs
+     http_req_sending...............: avg=1.42ms   min=0s      med=0s       max=239.73ms p(90)=0s       p(95)=0s      
+     http_req_tls_handshaking.......: avg=186.85µs min=0s      med=0s       max=29.24ms  p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=307.44ms min=59.34ms med=122.01ms max=1m0s     p(90)=153.01ms p(95)=165.7ms 
+     http_reqs......................: 338     0.318333/s
+     iteration_duration.............: avg=17m41s   min=17m41s  med=17m41s   max=17m41s   p(90)=17m41s   p(95)=17m41s  
+     iterations.....................: 1       0.000942/s
+     ocr_job_failed.................: 100.00% ✓ 8        ✗ 0  
+     vus............................: 1       min=1      max=1
+     vus_max........................: 1       min=1      max=1

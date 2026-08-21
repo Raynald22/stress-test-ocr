@@ -1,0 +1,72 @@
+     █ doc_Commercial Invoice 8000043145.PDF
+
+       █ upload
+
+     █ doc_INV.PDF
+
+       █ upload
+
+       █ ocr_create_invoice
+
+     █ doc_Invoice Banyak.pdf
+
+       █ upload
+
+       █ ocr_create_invoice
+
+     █ doc_MT1527_Switch invoice_DICV for CHC.pdf
+
+       █ upload
+
+       █ ocr_create_invoice
+
+     █ doc_Packing List Banyak.pdf
+
+       █ upload
+
+       █ ocr_create_packing_list
+
+     █ doc_BL Banyak.pdf
+
+       █ upload
+
+       █ ocr_create_bill_of_lading
+
+     █ doc_0202060 sho[2].PDF
+
+       █ upload
+
+       █ ocr_create_invoice
+
+       █ ocr_create_packing_list
+
+       █ ocr_create_bill_of_lading
+
+     █ doc_AEDE1167SS-I.pdf
+
+       █ upload
+
+       █ ocr_create_invoice
+
+       █ ocr_create_packing_list
+
+       █ ocr_create_bill_of_lading
+
+     data_received..................: 18 kB   282 B/s
+     data_sent......................: 15 MB   240 kB/s
+     group_duration.................: avg=4.6s     min=36.11ms med=105.19ms max=1m0s     p(90)=551.11ms p(95)=42.22s  
+     http_req_blocked...............: avg=1.05ms   min=0s      med=0s       max=20.03ms  p(90)=0s       p(95)=2ms     
+     http_req_connecting............: avg=304.18µs min=0s      med=0s       max=5.77ms   p(90)=0s       p(95)=577.94µs
+     http_req_duration..............: avg=3.27s    min=36.11ms med=73.2ms   max=1m0s     p(90)=283.07ms p(95)=6.46s   
+       { expected_response:true }...: avg=195.04ms min=36.11ms med=177.02ms max=516.77ms p(90)=341.5ms  p(95)=429.14ms
+     http_req_failed................: 63.15%  ✓ 12       ✗ 7  
+     http_req_receiving.............: avg=133.94µs min=0s      med=0s       max=1ms      p(90)=428.88µs p(95)=508.07µs
+     http_req_sending...............: avg=13.24ms  min=0s      med=0s       max=186.9ms  p(90)=16.44ms  p(95)=35.85ms 
+     http_req_tls_handshaking.......: avg=750.34µs min=0s      med=0s       max=14.25ms  p(90)=0s       p(95)=1.42ms  
+     http_req_waiting...............: avg=3.25s    min=33.37ms med=69.23ms  max=1m0s     p(90)=232.71ms p(95)=6.3s    
+     http_reqs......................: 19      0.305449/s
+     iteration_duration.............: avg=1m2s     min=1m2s    med=1m2s     max=1m2s     p(90)=1m2s     p(95)=1m2s    
+     iterations.....................: 1       0.016076/s
+     ocr_job_failed.................: 100.00% ✓ 8        ✗ 0  
+     vus............................: 1       min=1      max=1
+     vus_max........................: 1       min=1      max=1

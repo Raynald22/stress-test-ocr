@@ -38,8 +38,13 @@ dilayani sebelum latency naik atau mulai error.
 - **Alamat server** — sudah di-set default ke `https://dev-backend.insw.go.id/kepabeanan-hpc`
   di semua skrip, jadi `-e BASE_URL=...` **opsional** (cuma perlu kalau mau
   nembak env lain, misal lokal `http://localhost:3000`).
-- **Token** — **nggak perlu**. Service ini nggak pakai auth (cuma CORS). Semua
-  perintah di bawah nggak butuh token.
+- **Token — WAJIB.** Semua route `/api/v1/*` (CRUD, excel, file) dilindungi
+  middleware SSO (`internal/middleware/sso_auth.go`): tanpa header `Authorization`
+  atau dengan token yang nggak valid, request langsung **401** sebelum sampai ke
+  handler-nya (jadi test seolah-olah "gagal total" padahal endpoint/param-nya
+  sendiri benar). Minta bearer token SSO dev yang valid ke dev, lalu tambahin
+  `-e AUTH_TOKEN=<token>` di **setiap** perintah k6 di bawah. Cuma `GET /healthz`
+  dan `GET /` yang bebas auth.
 - **`targets.json`** — daftar endpoint yang mau dites. Salin dari contoh:
   ```bash
   cp targets.example.json targets.json
@@ -77,17 +82,20 @@ Mastiin alamat server bener dan response-nya sesuai bentuk yang diharapkan
 (status 200 + amplop `success:true`), pakai beberapa request aja.
 
 ```bash
-k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-hpc smoke.js
+k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-hpc \
+       -e AUTH_TOKEN=<token-sso-dev> smoke.js
 ```
 
 Yang dicek: `GET /healthz` → 200, `GET /` → info service, dan endpoint baca
-pertama di `targets.json` → 200 dengan amplop bener. Kalau ini gagal, **jangan
-lanjut** — beresin dulu alamat/targets-nya.
+pertama di `targets.json` → 200 dengan amplop bener. Kalau `AUTH_TOKEN` kosong/
+salah, endpoint baca bakal balik **401** (bukan salah alamat/targets) — cek
+token dulu sebelum curiga ke tempat lain. Kalau ini gagal, **jangan lanjut** —
+beresin dulu token/alamat/targets-nya.
 
 Mau sekalian nyoba 1 upload? Siapin template valid di `targets.json`, lalu:
 
 ```bash
-k6 run -e BASE_URL=... -e UPLOAD=1 smoke.js
+k6 run -e BASE_URL=... -e AUTH_TOKEN=<token-sso-dev> -e UPLOAD=1 smoke.js
 ```
 
 ---
@@ -100,6 +108,7 @@ kecepatan tetap, ukur latency + error rate. **Nggak ngubah data.**
 ```bash
 # 50 request/detik selama 5 menit
 k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-hpc \
+       -e AUTH_TOKEN=<token-sso-dev> \
        -e MODE=read -e RATE=50 -e UNIT=1s -e DURATION=5m hpc_stress.js
 ```
 
@@ -127,6 +136,7 @@ Butuh template `.xlsx` valid dari dev (ditunjuk di `targets.json` → `upload`).
 ```bash
 # 2 upload/detik selama 3 menit
 k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-hpc \
+       -e AUTH_TOKEN=<token-sso-dev> \
        -e MODE=upload -e RATE=2 -e UNIT=1s -e DURATION=3m hpc_stress.js
 ```
 
@@ -141,7 +151,8 @@ Ngecek server nolak input jelek **dengan sopan** (kode 4xx yang benar), bukan
 500 atau nge-hang:
 
 ```bash
-k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-hpc negative.js
+k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-hpc \
+       -e AUTH_TOKEN=<token-sso-dev> negative.js
 ```
 
 Yang diuji antara lain: `GET /:id` dengan UUID ngawur (400) & UUID nggak ada
@@ -170,7 +181,8 @@ Korpusnya: file bukan-zip yang disamarin `.xlsx`, file 0 byte, file kegedean
 `id_doc`/skema-nya nggak dikenal, dan xlsx 50rb baris (berat). Lalu:
 
 ```bash
-k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-hpc robustness.js
+k6 run -e BASE_URL=https://dev-backend.insw.go.id/kepabeanan-hpc \
+       -e AUTH_TOKEN=<token-sso-dev> robustness.js
 ```
 
 Aturan utamanya: **tiap upload harus balik dengan status HTTP beneran (nggak

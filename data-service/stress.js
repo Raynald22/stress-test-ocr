@@ -10,9 +10,9 @@
 //                Best for finding the cached read ceiling + checking cache pays off.
 //   MODE=domain             — hammer GET domain endpoints (pengajuan/barang/...).
 //                Read-only, but hits Postgres directly (no cache) — heavier.
-//   MODE=review             — hammer GET /review-dan-submit?idHeader=<uuid>. Read-only
+//   MODE=review             — hammer GET /review-dan-submit?idPermohonan=<uuid>. Read-only
 //                but an aggregate query (statistik kelengkapan across sections).
-//                Needs valid idHeader UUIDs in targets.json (review_dan_submit.id_headers).
+//                Needs valid idPermohonan UUIDs in targets.json (review_dan_submit.id_permohonans).
 //   MODE=bundle             — POST /ssm-impor-api-bundle-post with the sample
 //                bundle. HEAVY WRITE (insert across many tables in one tx). This
 //                is the path HPC calls. WRITES DATA every request — dev only.
@@ -54,7 +54,7 @@ const TARGETS = new SharedArray('targets', () => [JSON.parse(open('./targets.jso
 const REFERENSI = TARGETS.referensi_endpoints || [];
 const DOMAIN    = TARGETS.domain_endpoints || [];
 const REVIEW    = TARGETS.review_dan_submit || {};
-const REVIEW_IDS = REVIEW.id_headers || [];
+const REVIEW_IDS = REVIEW.id_permohonans || [];
 const BUNDLE    = TARGETS.bundle || {};
 const BUNDLE_BODY = (MODE === 'bundle' && BUNDLE.payload)
   ? new SharedArray('bundle', () => [open(`./${BUNDLE.payload}`)])[0]
@@ -108,15 +108,15 @@ export default function () {
     return;
   }
 
-  // review mode: GET /review-dan-submit?idHeader=<valid uuid> (endpoint requires it)
+  // review mode: GET /review-dan-submit?idPermohonan=<valid uuid> (endpoint requires it)
   if (MODE === 'review') {
     if (REVIEW_IDS.length === 0) {
-      console.error('MODE=review needs review_dan_submit.id_headers in targets.json (valid idHeader UUIDs from dev)');
+      console.error('MODE=review needs review_dan_submit.id_permohonans in targets.json (valid idPermohonan UUIDs from dev)');
       reqFailed.add(true);
       return;
     }
     const id = randomItem(REVIEW_IDS);
-    const res = http.get(`${BASE_URL}${REVIEW.path || '/api/v1/review-dan-submit'}?idHeader=${id}`,
+    const res = http.get(`${BASE_URL}${REVIEW.path || '/api/v1/review-dan-submit'}?idPermohonan=${id}`,
       { headers: headers(), tags: { name: 'review' } });
     readLatency.add(res.timings.duration);
     const ok = check(res, {
@@ -124,7 +124,7 @@ export default function () {
       'review has success:true': (r) => { try { return r.json('success') === true; } catch (_) { return false; } },
     });
     reqFailed.add(!ok);
-    if (!ok) console.error(`review idHeader=${id} -> ${res.status}: ${String(res.body).slice(0, 200)}`);
+    if (!ok) console.error(`review idPermohonan=${id} -> ${res.status}: ${String(res.body).slice(0, 200)}`);
     return;
   }
 

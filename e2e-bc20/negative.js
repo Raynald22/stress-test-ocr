@@ -99,7 +99,7 @@ export default function () {
   });
 
   group('review_unknown_id', () => {
-    const res = http.get(`${DS}/api/v1/review-dan-submit?idHeader=${FAKE_ID}`, { headers: headers() });
+    const res = http.get(`${DS}/api/v1/review-dan-submit?idPermohonan=${FAKE_ID}`, { headers: headers() });
     assertStatus(res, [200, 400, 404], 'GET /review-dan-submit (unknown id)');
   });
 

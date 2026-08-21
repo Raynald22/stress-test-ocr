@@ -5,7 +5,7 @@
 //   2. HPC           POST /api/v1/excel/upload  (xlsx)       -> header_id (bc20)
 //   3. HPC           POST /api/v1/data-service/ssm-impor-bundle  (forwards to data-service)
 //   4. data-service  GET  /api/v1/pengajuan?id_permohonan=.. -> idHeader (data-service)
-//   5. data-service  GET  /api/v1/review-dan-submit?idHeader=..
+//   5. data-service  GET  /api/v1/review-dan-submit?idPermohonan=..
 //
 // Closed model: each VU runs the whole chain end-to-end, then loops. We measure
 // EACH hop (e2e_*_ms) and the whole journey (e2e_journey_ms). A journey counts

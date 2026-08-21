@@ -1,0 +1,42 @@
+     █ doc_INV.PDF
+
+       █ upload
+
+       █ ocr_create_invoice
+
+     █ doc_Invoice Banyak.pdf
+
+       █ upload
+
+       █ ocr_create_invoice
+
+     █ doc_Packing List Banyak.pdf
+
+       █ upload
+
+       █ ocr_create_packing_list
+
+     █ doc_BL Banyak.pdf
+
+       █ upload
+
+       █ ocr_create_bill_of_lading
+
+     data_received..................: 12 kB   6.5 kB/s
+     data_sent......................: 12 MB   6.2 MB/s
+     group_duration.................: avg=305.19ms min=49.35ms med=201.27ms max=903.58ms p(90)=795.95ms p(95)=863.8ms 
+     http_req_blocked...............: avg=4.18ms   min=0s      med=0s       max=33.46ms  p(90)=10.03ms  p(95)=21.74ms 
+     http_req_connecting............: avg=460.27µs min=0s      med=0s       max=3.68ms   p(90)=1.1ms    p(95)=2.39ms  
+     http_req_duration..............: avg=222.72ms min=49.35ms med=75.01ms  max=792.17ms p(90)=531.56ms p(95)=661.87ms
+       { expected_response:true }...: avg=387.85ms min=82.59ms med=338.31ms max=792.17ms p(90)=680.48ms p(95)=736.33ms
+     http_req_failed................: 50.00%  ✓ 4        ✗ 4  
+     http_req_receiving.............: avg=0s       min=0s      med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_sending...............: avg=144.52ms min=0s      med=19.48ms  max=630.45ms p(90)=401.03ms p(95)=515.74ms
+     http_req_tls_handshaking.......: avg=3.49ms   min=0s      med=0s       max=27.97ms  p(90)=8.39ms   p(95)=18.18ms 
+     http_req_waiting...............: avg=78.19ms  min=43.61ms med=63.6ms   max=161.72ms p(90)=130.53ms p(95)=146.12ms
+     http_reqs......................: 8       4.358012/s
+     iteration_duration.............: avg=1.83s    min=1.83s   med=1.83s    max=1.83s    p(90)=1.83s    p(95)=1.83s   
+     iterations.....................: 1       0.544751/s
+     ocr_job_failed.................: 100.00% ✓ 4        ✗ 0  
+     vus............................: 1       min=1      max=1
+     vus_max........................: 1       min=1      max=1

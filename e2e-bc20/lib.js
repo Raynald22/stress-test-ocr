@@ -1,12 +1,16 @@
 // Shared helpers + metrics for the E2E BC2.0 journeys.
-// Config is read from ./config.json (copy of config.example.json). The SSO token
-// is NOT read from the file — pass it via -e SSO_TOKEN=... at runtime.
+// Config is read from ./config.json by default (copy of config.example.json).
+// Pass -e ENV=<name> to use ./configs/<name>.json instead (one profile per
+// environment — see configs/example.json), or -e CONFIG_FILE=<path> to point
+// at an arbitrary file. The SSO token is NEVER read from any config file —
+// pass it via -e SSO_TOKEN=... at runtime, same regardless of ENV.
 
 import http from 'k6/http';
 import { group, sleep } from 'k6';
 import { Trend, Rate, Counter } from 'k6/metrics';
 
-export const CFG = JSON.parse(open('./config.json'));
+const CFG_PATH = __ENV.ENV ? `./configs/${__ENV.ENV}.json` : (__ENV.CONFIG_FILE || './config.json');
+export const CFG = JSON.parse(open(CFG_PATH));
 export const SSO_TOKEN = __ENV.SSO_TOKEN || '';
 
 export const DS  = (__ENV.DATA_SERVICE_URL || CFG.base_urls.data_service).replace(/\/+$/, '');
@@ -133,7 +137,7 @@ export function runExcelJourney(o) {
 
   if (idHeaderDs) {
     group('5_review', () => {
-      const res = http.get(`${DS}/api/v1/review-dan-submit?idHeader=${encodeURIComponent(idHeaderDs)}`, { headers: headers(), tags: { hop: 'review' } });
+      const res = http.get(`${DS}/api/v1/review-dan-submit?idPermohonan=${encodeURIComponent(idPermohonan)}`, { headers: headers(), tags: { hop: 'review' } });
       const ok = hop(T.review, res, (r) => r.status === 200, 'GET /review-dan-submit');
       if (!ok) failed = true;
     });
@@ -220,7 +224,7 @@ export function runOcrJourney(o) {
 
   if (idHeaderDs) {
     group('7_review', () => {
-      const res = http.get(`${DS}/api/v1/review-dan-submit?idHeader=${encodeURIComponent(idHeaderDs)}`, { headers: headers(), tags: { hop: 'review' } });
+      const res = http.get(`${DS}/api/v1/review-dan-submit?idPermohonan=${encodeURIComponent(idPermohonan)}`, { headers: headers(), tags: { hop: 'review' } });
       const ok = hop(T.review, res, (r) => r.status === 200, 'GET /review-dan-submit');
       if (!ok) failed = true;
     });

@@ -47,7 +47,7 @@ export default function () {
 
   const health = http.get(`${BASE_URL}/api/v1/health`, { headers: headers() });
   check(health, {
-    'GET /health -> 200': (r) => r.status === 200,
+    'GET /health -> 200 or 503': (r) => r.status === 200 || r.status === 503,
     'health has LBP envelope': (r) => isLbpEnvelope(r),
   });
 

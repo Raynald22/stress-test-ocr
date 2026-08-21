@@ -1,0 +1,263 @@
+{
+  "options": {
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": "",
+    "noColor": false
+  },
+  "state": {
+    "isStdOutTTY": false,
+    "isStdErrTTY": false,
+    "testRunDurationMs": 630003.6866
+  },
+  "metrics": {
+    "data_sent": {
+      "contains": "data",
+      "values": {
+        "count": 8932961,
+        "rate": 14179.220201407627
+      },
+      "type": "counter"
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 1.6761,
+        "p(90)": 0.52155,
+        "p(95)": 0.5858,
+        "avg": 0.09489354838709678,
+        "min": 0,
+        "med": 0
+      }
+    },
+    "group_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 90385.9164375,
+        "min": 138.5123,
+        "med": 30340.739900000004,
+        "max": 301278.4402,
+        "p(90)": 300734.17774,
+        "p(95)": 301006.30897
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "passes": 1,
+        "fails": 185,
+        "rate": 0.005376344086021506
+      }
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 130515,
+        "rate": 207.16545438704102
+      }
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 159.2979,
+        "p(95)": 181.72335,
+        "avg": 456.96336989247357,
+        "min": 100.9351,
+        "med": 123.4705,
+        "max": 60017.4281
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.17946505376344085,
+        "min": 0,
+        "med": 0,
+        "max": 18.153,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 60016.1385,
+        "p(90)": 159.12285,
+        "p(95)": 181.72335,
+        "avg": 456.07916935483877,
+        "min": 100.8666,
+        "med": 123.34395
+      }
+    },
+    "ocr_job_failed": {
+      "values": {
+        "rate": 1,
+        "passes": 2,
+        "fails": 0
+      },
+      "type": "rate",
+      "contains": "default"
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 135.01491189189184,
+        "min": 100.9351,
+        "med": 123.38,
+        "max": 634.765,
+        "p(90)": 157.50598,
+        "p(95)": 179.26437999999987
+      }
+    },
+    "vus": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 1
+      }
+    },
+    "vus_max": {
+      "contains": "default",
+      "values": {
+        "max": 1,
+        "value": 1,
+        "min": 1
+      },
+      "type": "gauge"
+    },
+    "http_reqs": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 186,
+        "rate": 0.2952363675898528
+      }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 0,
+        "avg": 0.27259301075268816,
+        "min": 0,
+        "med": 0,
+        "max": 25.7155,
+        "p(90)": 0
+      }
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 0,
+        "med": 0,
+        "max": 131.9022,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.7893069892473119
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.05444462365591397,
+        "min": 0,
+        "med": 0,
+        "max": 5.3042,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    }
+  },
+  "root_group": {
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [
+      {
+        "checks": [],
+        "name": "doc_Commercial Invoice 8000043145.PDF",
+        "path": "::doc_Commercial Invoice 8000043145.PDF",
+        "id": "5a52729e92d552fdcec436d2c79bcf04",
+        "groups": [
+            {
+              "checks": [],
+              "name": "upload",
+              "path": "::doc_Commercial Invoice 8000043145.PDF::upload",
+              "id": "82ba03b025d59f9820d056a591f5115d",
+              "groups": []
+            }
+          ]
+      },
+      {
+        "path": "::doc_INV.PDF",
+        "id": "bcc486a330f0ca81fef1e2bc6d7ab7be",
+        "groups": [
+          {
+            "path": "::doc_INV.PDF::upload",
+            "id": "73402f84e2b40408beb8c6d0e5d05055",
+            "groups": [],
+            "checks": [],
+            "name": "upload"
+          },
+          {
+            "checks": [],
+            "name": "ocr_create_invoice",
+            "path": "::doc_INV.PDF::ocr_create_invoice",
+            "id": "fb7f0cc7fd5b09e09a7f57d7949c1c88",
+            "groups": []
+          },
+          {
+            "name": "ocr_poll_invoice",
+            "path": "::doc_INV.PDF::ocr_poll_invoice",
+            "id": "d10a9d0bcd9f12c6d5d13cfd84a988c2",
+            "groups": [],
+            "checks": []
+          }
+        ],
+        "checks": [],
+        "name": "doc_INV.PDF"
+      },
+      {
+        "path": "::doc_Invoice Banyak.pdf",
+        "id": "1997c1740a6a1baf1161880b38cdd433",
+        "groups": [
+          {
+            "name": "upload",
+            "path": "::doc_Invoice Banyak.pdf::upload",
+            "id": "b15021a884048a6b0230ea1c5dbcc9a6",
+            "groups": [],
+            "checks": []
+          },
+          {
+            "checks": [],
+            "name": "ocr_create_invoice",
+            "path": "::doc_Invoice Banyak.pdf::ocr_create_invoice",
+            "id": "46de0ddb8b4330fe7f5c617b2ae954f4",
+            "groups": []
+          }
+        ],
+        "checks": [],
+        "name": "doc_Invoice Banyak.pdf"
+      }
+    ],
+    "checks": []
+  }
+}

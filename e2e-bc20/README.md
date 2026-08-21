@@ -46,7 +46,7 @@ data-service  POST /api/v1/permohonan                 -> idPermohonan
 HPC           POST /api/v1/excel/upload  (xlsx)        -> header_id
 HPC           POST /api/v1/data-service/ssm-impor-bundle   (forward ke data-service)
 data-service  GET  /api/v1/pengajuan?id_permohonan=..  -> idHeader
-data-service  GET  /api/v1/review-dan-submit?idHeader=..
+data-service  GET  /api/v1/review-dan-submit?idPermohonan=..
 ```
 
 ### 2. `journey_ocr.js` — jalur OCR smart-form (termasuk OCR async yang lambat)
@@ -58,7 +58,7 @@ OCR           POST /ocr/create                         -> job_id
 OCR           GET  /ocr/getData/{job_id}  (poll sampai selesai)
 OCR           POST /ocr/submit/{job_id}                -> build bundle BC2.0 -> data-service
 data-service  GET  /api/v1/pengajuan?id_permohonan=..  -> idHeader
-data-service  GET  /api/v1/review-dan-submit?idHeader=..
+data-service  GET  /api/v1/review-dan-submit?idPermohonan=..
 ```
 
 Model **closed** (`constant-vus`): tiap virtual user jalanin seluruh rantai
@@ -84,6 +84,42 @@ iterasi berhenti (hop sisanya di-skip).
   - `invoice_sample.pdf` — dokumen contoh buat `journey_ocr` (boleh diganti PDF asli).
   - `bad/` — file rusak statis buat `robustness.js` (xlsx kosong, bukan xlsx
     asli, xlsx ke-truncate, PDF korup). Gak perlu diganti, memang sengaja rusak.
+
+---
+
+## Banyak environment (`ENV=`)
+
+Kalau QA perlu nembak ke instance dev lain, atau pakai `jenis_dokumen`/
+template Excel yang beda-beda, gak perlu timpa `config.json` tiap kali
+ganti target — simpen tiap target sebagai **profil terpisah** di `configs/`:
+
+```bash
+cp configs/example.json configs/dev2.json
+# edit configs/dev2.json: base_urls / jenis_dokumen / excel.template / ocr.files
+```
+
+Lalu pakai lewat `-e ENV=<nama>` — berlaku ke **semua** script di folder ini
+(`smoke.js`, `journey_excel.js`/`journey_ocr.js`, `negative.js`,
+`robustness.js`, `concurrency.js`, `stress.js`, `spike.js`, `soak.js`), gak
+perlu ganti command per-script karena semua baca config lewat titik yang
+sama (`CFG` di `lib.js`):
+
+```bash
+k6 run -e ENV=dev2 -e SSO_TOKEN=<bearer> smoke.js
+k6 run -e ENV=dev2 -e SSO_TOKEN=<bearer> -e VUS=5 -e DURATION=3m journey_excel.js
+```
+
+Gak diset `ENV`? Tetap pakai `config.json` di root seperti biasa (default,
+gak ada yang berubah). Butuh path config custom di luar konvensi
+`configs/<nama>.json`? Ada juga `-e CONFIG_FILE=<path>`.
+
+`excel.template`/`ocr.files[].path` di tiap profil bisa nunjuk ke sample
+file yang beda juga (mis. `samples/dev2_template.xlsx`) — gak perlu file
+sample terpisah per-environment kecuali emang templatenya beda.
+
+**`SSO_TOKEN` tetap terpisah dari config dan tetap diketik tiap run** lewat
+`-e SSO_TOKEN=` — ini gak berubah walau `ENV` beda-beda, karena token
+memang selalu ganti dan sengaja gak pernah disimpan di file.
 
 ---
 

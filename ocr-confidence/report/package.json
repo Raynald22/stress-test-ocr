@@ -1,0 +1,14 @@
+{
+  "name": "ocr-confidence-report",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Converts a k6 ocr-confidence run log into a formatted Excel + Word report.",
+  "type": "commonjs",
+  "scripts": {
+    "build": "node build-report.js"
+  },
+  "dependencies": {
+    "docx": "^9.1.1",
+    "exceljs": "^4.4.0"
+  }
+}

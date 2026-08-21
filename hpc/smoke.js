@@ -20,7 +20,7 @@ import { makeSummary } from './summary.js';
 export const handleSummary = makeSummary('smoke');
 
 const BASE_URL   = (__ENV.BASE_URL || 'https://dev-backend.insw.go.id/kepabeanan-hpc').replace(/\/+$/, '');
-const AUTH_TOKEN = __ENV.AUTH_TOKEN || '';           // usually empty; set only if a gateway needs it
+const AUTH_TOKEN = __ENV.AUTH_TOKEN || '';           // REQUIRED — every /api/v1/* route needs a valid SSO bearer token (401 otherwise)
 const DO_UPLOAD  = (__ENV.UPLOAD || '0') === '1';    // also try one Excel upload
 
 const TARGETS = new SharedArray('targets', () => [JSON.parse(open('./targets.json'))])[0];

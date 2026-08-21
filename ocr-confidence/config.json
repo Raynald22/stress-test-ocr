@@ -1,0 +1,27 @@
+{
+  "_comment": [
+    "Config ocr-confidence. Salin jadi config.json, sesuaikan.",
+    "SSO token WAJIB — jangan taruh di file ini; kasih lewat -e SSO_TOKEN=... waktu jalan.",
+    "base_url tiap service sudah default ke dev; override kalau perlu.",
+    "documents: dokumen yang mau dites, satu-satu jadi 1 OCR job sendiri",
+    "  (beda dari e2e-bc20 yang nggabungin semua dokumen 1 submission jadi 1 job)",
+    "  biar confident_score-nya jelas ketauan punya dokumen yang mana.",
+    "  path relatif ke folder ocr-confidence/. doc_type: invoice | packing_list | bill_of_lading | auto.",
+    "  doc_type 'auto': dokumen yang jenisnya gak jelas dari nama file — dicoba ke 3 jenis,",
+    "  yang completeness-nya paling tinggi dipilih (lihat README, section 'Mode auto-detect').",
+    "  dokumen: label buat data-service upload (mis. 'Invoice (INV)')."
+  ],
+  "base_urls": {
+    "data_service": "https://dev-backend.insw.go.id/kepabeanan-data-service",
+    "ocr": "https://dev-backend.insw.go.id/kepabeanan-ocr"
+  },
+  "created_by": "qa-ocr-confidence",
+  "documents": [
+    { "path": "samples/INV.PDF", "doc_type": "invoice", "dokumen": "Invoice (INV)" },
+    { "path": "samples/Invoice Banyak.pdf", "doc_type": "invoice", "dokumen": "Invoice (INV)" },
+    { "path": "samples/Packing List Banyak.pdf", "doc_type": "packing_list", "dokumen": "Packing List (PL)" },
+    { "path": "samples/BL Banyak.pdf", "doc_type": "bill_of_lading", "dokumen": "Bill of Lading (BL)" }
+  ],
+  "poll_interval_s": 3,
+  "max_wait_s": 900
+}

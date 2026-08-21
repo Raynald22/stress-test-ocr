@@ -1,0 +1,491 @@
+{
+  "state": {
+    "isStdOutTTY": false,
+    "isStdErrTTY": false,
+    "testRunDurationMs": 1061781.6907
+  },
+  "metrics": {
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 1.7853,
+        "p(90)": 0.47786000000000006,
+        "p(95)": 0.5432399999999998,
+        "avg": 0.10066656804733728,
+        "min": 0,
+        "med": 0
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 0,
+        "avg": 0.0659180473372781,
+        "min": 0,
+        "med": 0,
+        "max": 14.6608,
+        "p(90)": 0
+      }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 153.01658,
+        "p(95)": 165.70199999999997,
+        "avg": 307.44818846153845,
+        "min": 59.3489,
+        "med": 122.01535000000001,
+        "max": 60052.044
+      }
+    },
+    "vus_max": {
+      "values": {
+        "max": 1,
+        "value": 1,
+        "min": 1
+      },
+      "type": "gauge",
+      "contains": "default"
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "rate": 221.43252427436119,
+        "count": 235113
+      }
+    },
+    "vus": {
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 1
+      },
+      "type": "gauge",
+      "contains": "default"
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.18685532544378697,
+        "min": 0,
+        "med": 0,
+        "max": 29.2451,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "group_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 60108.10695,
+        "max": 273182.8121,
+        "p(90)": 91156.67942,
+        "p(95)": 118714.97200999974,
+        "avg": 55882.91786052631,
+        "min": 61.5224
+      }
+    },
+    "http_req_duration": {
+      "values": {
+        "avg": 308.9742801775148,
+        "min": 61.5224,
+        "med": 122.01535000000001,
+        "max": 60055.3334,
+        "p(90)": 154.00150000000002,
+        "p(95)": 170.02020999999996
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 1061778.4456,
+        "avg": 1061778.4456,
+        "min": 1061778.4456,
+        "med": 1061778.4456,
+        "max": 1061778.4456,
+        "p(90)": 1061778.4456
+      }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 338,
+        "rate": 0.31833285783744025
+      }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.3248514792899408,
+        "min": 0,
+        "med": 0,
+        "max": 45.951,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "http_req_failed": {
+      "contains": "default",
+      "values": {
+        "rate": 0.0029585798816568047,
+        "passes": 1,
+        "fails": 337
+      },
+      "type": "rate"
+    },
+    "ocr_job_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 8,
+        "fails": 0
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 166.92159999999996,
+        "avg": 131.68538071216608,
+        "min": 61.5224,
+        "med": 121.9972,
+        "max": 653.113,
+        "p(90)": 153.53608000000003
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 15371204,
+        "rate": 14476.802655983114
+      }
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 1.425425147928994,
+        "min": 0,
+        "med": 0,
+        "max": 239.7373,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "iterations": {
+      "values": {
+        "count": 1,
+        "rate": 0.0009418131888681663
+      },
+      "type": "counter",
+      "contains": "default"
+    }
+  },
+  "root_group": {
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [
+      {
+        "name": "doc_Commercial Invoice 8000043145.PDF",
+        "path": "::doc_Commercial Invoice 8000043145.PDF",
+        "id": "5a52729e92d552fdcec436d2c79bcf04",
+        "groups": [
+          {
+            "name": "upload",
+            "path": "::doc_Commercial Invoice 8000043145.PDF::upload",
+            "id": "82ba03b025d59f9820d056a591f5115d",
+            "groups": [],
+            "checks": []
+          }
+        ],
+        "checks": []
+      },
+      {
+        "name": "doc_INV.PDF",
+        "path": "::doc_INV.PDF",
+        "id": "bcc486a330f0ca81fef1e2bc6d7ab7be",
+        "groups": [
+          {
+            "name": "upload",
+            "path": "::doc_INV.PDF::upload",
+            "id": "73402f84e2b40408beb8c6d0e5d05055",
+            "groups": [],
+            "checks": []
+          },
+          {
+            "checks": [],
+            "name": "ocr_create_invoice",
+            "path": "::doc_INV.PDF::ocr_create_invoice",
+            "id": "fb7f0cc7fd5b09e09a7f57d7949c1c88",
+            "groups": []
+          },
+          {
+            "path": "::doc_INV.PDF::ocr_poll_invoice",
+            "id": "d10a9d0bcd9f12c6d5d13cfd84a988c2",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_poll_invoice"
+          }
+        ],
+        "checks": []
+      },
+      {
+        "name": "doc_Invoice Banyak.pdf",
+        "path": "::doc_Invoice Banyak.pdf",
+        "id": "1997c1740a6a1baf1161880b38cdd433",
+        "groups": [
+          {
+            "checks": [],
+            "name": "upload",
+            "path": "::doc_Invoice Banyak.pdf::upload",
+            "id": "b15021a884048a6b0230ea1c5dbcc9a6",
+            "groups": []
+          },
+          {
+            "checks": [],
+            "name": "ocr_create_invoice",
+            "path": "::doc_Invoice Banyak.pdf::ocr_create_invoice",
+            "id": "46de0ddb8b4330fe7f5c617b2ae954f4",
+            "groups": []
+          },
+          {
+            "name": "ocr_poll_invoice",
+            "path": "::doc_Invoice Banyak.pdf::ocr_poll_invoice",
+            "id": "ec11ee4697c56e5240df7da7d10c62c1",
+            "groups": [],
+            "checks": []
+          }
+        ],
+        "checks": []
+      },
+      {
+        "name": "doc_MT1527_Switch invoice_DICV for CHC.pdf",
+        "path": "::doc_MT1527_Switch invoice_DICV for CHC.pdf",
+        "id": "e4791bfc3a6a7fed97217c3787b38fd6",
+        "groups": [
+          {
+            "path": "::doc_MT1527_Switch invoice_DICV for CHC.pdf::upload",
+            "id": "032a97957e5055ad9768e6f1160997a9",
+            "groups": [],
+            "checks": [],
+            "name": "upload"
+          },
+          {
+            "checks": [],
+            "name": "ocr_create_invoice",
+            "path": "::doc_MT1527_Switch invoice_DICV for CHC.pdf::ocr_create_invoice",
+            "id": "82cd350082ecdca651940b555af71f1f",
+            "groups": []
+          },
+          {
+            "name": "ocr_poll_invoice",
+            "path": "::doc_MT1527_Switch invoice_DICV for CHC.pdf::ocr_poll_invoice",
+            "id": "1a6f0260e0c60f7fa5be24637ebf3efb",
+            "groups": [],
+            "checks": []
+          }
+        ],
+        "checks": []
+      },
+      {
+        "path": "::doc_Packing List Banyak.pdf",
+        "id": "a548f2980d9d33178af533a5987bae9d",
+        "groups": [
+          {
+            "checks": [],
+            "name": "upload",
+            "path": "::doc_Packing List Banyak.pdf::upload",
+            "id": "5cd68f5fcbff5ece2dc750a712cbddd8",
+            "groups": []
+          },
+          {
+            "name": "ocr_create_packing_list",
+            "path": "::doc_Packing List Banyak.pdf::ocr_create_packing_list",
+            "id": "77d3f0149f34065567bcf34b1db35102",
+            "groups": [],
+            "checks": []
+          },
+          {
+            "path": "::doc_Packing List Banyak.pdf::ocr_poll_packing_list",
+            "id": "b9e7a96ba8c182434bef79532fdbb5c7",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_poll_packing_list"
+          }
+        ],
+        "checks": [],
+        "name": "doc_Packing List Banyak.pdf"
+      },
+      {
+        "name": "doc_BL Banyak.pdf",
+        "path": "::doc_BL Banyak.pdf",
+        "id": "5d468d9f45469cee077a6387d06c08ad",
+        "groups": [
+          {
+            "path": "::doc_BL Banyak.pdf::upload",
+            "id": "6250b79a092cbae6af660800535e0009",
+            "groups": [],
+            "checks": [],
+            "name": "upload"
+          },
+          {
+            "path": "::doc_BL Banyak.pdf::ocr_create_bill_of_lading",
+            "id": "a82e82ffa455c0115ab477a195f38fa2",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_create_bill_of_lading"
+          },
+          {
+            "id": "3561b17846c27e43989aa25463b8125f",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_poll_bill_of_lading",
+            "path": "::doc_BL Banyak.pdf::ocr_poll_bill_of_lading"
+          }
+        ],
+        "checks": []
+      },
+      {
+        "id": "9677c8d5a3408a0f6e5e2a05c2636e00",
+        "groups": [
+          {
+            "id": "e50b61c43b32dde393695ed3a5364246",
+            "groups": [],
+            "checks": [],
+            "name": "upload",
+            "path": "::doc_0202060 sho[2].PDF::upload"
+          },
+          {
+            "id": "7b79cc5460ebec1e06eeffc02bb908ac",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_create_invoice",
+            "path": "::doc_0202060 sho[2].PDF::ocr_create_invoice"
+          },
+          {
+            "id": "07366a3732899ce03a00cc52d2bb6d35",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_poll_invoice",
+            "path": "::doc_0202060 sho[2].PDF::ocr_poll_invoice"
+          },
+          {
+            "checks": [],
+            "name": "ocr_create_packing_list",
+            "path": "::doc_0202060 sho[2].PDF::ocr_create_packing_list",
+            "id": "af191f0752fd59aea537d2e95a4cc24f",
+            "groups": []
+          },
+          {
+            "checks": [],
+            "name": "ocr_poll_packing_list",
+            "path": "::doc_0202060 sho[2].PDF::ocr_poll_packing_list",
+            "id": "c50ce212905deca222d4d1c466f588ef",
+            "groups": []
+          },
+          {
+            "id": "d649a4eec5f164b4f1a806f467e4e991",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_create_bill_of_lading",
+            "path": "::doc_0202060 sho[2].PDF::ocr_create_bill_of_lading"
+          },
+          {
+            "groups": [],
+            "checks": [],
+            "name": "ocr_poll_bill_of_lading",
+            "path": "::doc_0202060 sho[2].PDF::ocr_poll_bill_of_lading",
+            "id": "e5a138534a1aa19099038b79379aba54"
+          }
+        ],
+        "checks": [],
+        "name": "doc_0202060 sho[2].PDF",
+        "path": "::doc_0202060 sho[2].PDF"
+      },
+      {
+        "name": "doc_AEDE1167SS-I.pdf",
+        "path": "::doc_AEDE1167SS-I.pdf",
+        "id": "0af60f945c4b09556b5be9853b019132",
+        "groups": [
+          {
+            "id": "bfc3aba43f4bb8656802a7fac580bfee",
+            "groups": [],
+            "checks": [],
+            "name": "upload",
+            "path": "::doc_AEDE1167SS-I.pdf::upload"
+          },
+          {
+            "id": "19f9dd32bef2be3ba1155030da76d3a8",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_create_invoice",
+            "path": "::doc_AEDE1167SS-I.pdf::ocr_create_invoice"
+          },
+          {
+            "name": "ocr_poll_invoice",
+            "path": "::doc_AEDE1167SS-I.pdf::ocr_poll_invoice",
+            "id": "ff64773ba0eacf9a9cb99e4029ea5a61",
+            "groups": [],
+            "checks": []
+          },
+          {
+            "path": "::doc_AEDE1167SS-I.pdf::ocr_create_packing_list",
+            "id": "25009d545f2c4dc6bba82bf3dc08500c",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_create_packing_list"
+          },
+          {
+            "name": "ocr_poll_packing_list",
+            "path": "::doc_AEDE1167SS-I.pdf::ocr_poll_packing_list",
+            "id": "f2c5e8194aa861ea374257e7609c0aa8",
+            "groups": [],
+            "checks": []
+          },
+          {
+            "path": "::doc_AEDE1167SS-I.pdf::ocr_create_bill_of_lading",
+            "id": "d7fb54908765a400ab2a46eb58f6d09d",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_create_bill_of_lading"
+          },
+          {
+            "id": "644f7ffe85c5d67fe3cf5ef2c0c1ad53",
+            "groups": [],
+            "checks": [],
+            "name": "ocr_poll_bill_of_lading",
+            "path": "::doc_AEDE1167SS-I.pdf::ocr_poll_bill_of_lading"
+          }
+        ],
+        "checks": []
+      }
+    ],
+    "checks": [],
+    "name": ""
+  },
+  "options": {
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": "",
+    "noColor": false
+  }
+}

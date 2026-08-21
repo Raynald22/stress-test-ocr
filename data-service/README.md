@@ -126,16 +126,16 @@ buat lihat seberapa besar untungnya cache.
 
 ---
 
-## Langkah 3b — Beban Review & Submit (perlu idHeader)
+## Langkah 3b — Beban Review & Submit (perlu idPermohonan)
 
 ```bash
 k6 run -e MODE=review -e RATE=30 -e DURATION=5m stress.js
 ```
 
-Nembak `GET /api/v1/review-dan-submit?idHeader=<uuid>` — endpoint cek kelengkapan
-yang **wajib `idHeader`** dan lumayan berat (agregasi statistik dokumen/kemasan/
+Nembak `GET /api/v1/review-dan-submit?idPermohonan=<uuid>` — endpoint cek kelengkapan
+yang **wajib `idPermohonan`** dan lumayan berat (agregasi statistik dokumen/kemasan/
 kontainer/barang + pungutan per section). Karena butuh record beneran, **isi dulu**
-`review_dan_submit.id_headers` di `targets.json` pakai 1+ UUID header aju yang
+`review_dan_submit.id_permohonans` di `targets.json` pakai 1+ UUID permohonan yang
 **ada di DB dev** (minta ke dev). Skrip milih acak dari daftar itu. Kalau daftar
 kosong, mode ini nggak jalan.
 

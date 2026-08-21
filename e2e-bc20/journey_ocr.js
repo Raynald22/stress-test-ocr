@@ -7,7 +7,7 @@
 //   4. OCR           GET  /ocr/getData/{job_id} (poll)       -> terminal (SUCCESS/FAILED)
 //   5. OCR           POST /ocr/submit/{job_id}               -> builds BC2.0 bundle -> data-service
 //   6. data-service  GET  /api/v1/pengajuan?id_permohonan=.. -> idHeader
-//   7. data-service  GET  /api/v1/review-dan-submit?idHeader=..
+//   7. data-service  GET  /api/v1/review-dan-submit?idPermohonan=..
 //
 // This path includes the ASYNC OCR job (step 4 polls until done), so one journey
 // can take tens of seconds to minutes — VUS stays small. Closed model: each VU
